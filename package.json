@@ -1,0 +1,17 @@
+{
+  "name": "web-raytracer-v2",
+  "version": "1.0.0",
+  "description": "Another browser-based raytracer written in TypeScript. Attempt 2",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx tsc --watch ",
+    "serve": "cd dist && npx ws"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "local-web-server": "^3.0.7",
+    "typescript": "^3.6.4"
+  }
+}
