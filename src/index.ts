@@ -1,3 +1,7 @@
-import foo from './bar.js';
+import CanvasOutput from "./CanvasOutput.js";
+import RenderEngine from "./RenderEngine.js";
 
-foo();
+const canvasEl = document.querySelector('canvas')!;
+const canvasOutput = new CanvasOutput(canvasEl);
+const renderEngine = new RenderEngine(canvasOutput);
+renderEngine.render();
