@@ -1,4 +1,4 @@
-import { Vec3, Vec2 } from "./types/index.js";
+import { Vec3, Vec2 } from "./Vec.js";
 
 export default class CanvasOutput {
   private context: CanvasRenderingContext2D;

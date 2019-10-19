@@ -1,6 +1,7 @@
 import CanvasOutput from "./CanvasOutput.js";
 import Colour from "./Colour.js";
 import { Integrator, Scene } from "./types/index.js";
+import { Vec2 } from "./Vec.js";
 
 export default class RenderEngine {
   constructor(
@@ -14,7 +15,7 @@ export default class RenderEngine {
       for (let x = 0; x < this.canvasOutput.width; x++) {
         const xyzColour = new Colour(frameBuffer.get(x, y), 'XYZ');
         const recColour = xyzColour.toRec709();
-        this.canvasOutput.setPixel(recColour.triplet, {x, y});
+        this.canvasOutput.setPixel(recColour.triplet, new Vec2(x, y));
       }
     }
     this.canvasOutput.redraw();

@@ -5,9 +5,10 @@ import BasicCamera from "./BasicCamera.js";
 import RandomSampler from "./RandomSampler.js";
 import { Scene } from "./types/index.js";
 import BasicFilm from "./BasicFilm.js";
+import { Vec3 } from "./Vec.js";
 
-const cameraPos = {x: 0, y: 0, z: 0};
-const cameraDir = {x: 0, y: 0, z: -1};
+const cameraPos = new Vec3(0, 0, 0);
+const cameraDir = new Vec3(0, 0, -1);
 
 const canvasEl = document.querySelector('canvas')!;
 const canvasOutput = new CanvasOutput(canvasEl);

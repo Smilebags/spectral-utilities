@@ -1,4 +1,5 @@
-import { Vec2, Sampler } from "./types/index.js";
+import { Sampler } from "./types/index.js";
+import { Vec2 } from "./Vec.js";
 
 export interface CameraSample {
   filmPos: Vec2;
@@ -14,7 +15,7 @@ export default class RandomSampler implements Sampler {
   samplesPerPixel: number = 16;
 
   get2D(): Vec2 {
-    return {x: Math.random(), y: Math.random()};
+    return new Vec2(Math.random(), Math.random());
   }
   get1D(): number {
     return Math.random();

@@ -1,4 +1,5 @@
 import { CameraSample } from "../RandomSampler";
+import { Vec2, Vec3 } from "../Vec.js";
 
 export interface Integrator {
   render(scene: Scene): FrameBuffer<Vec3>
@@ -39,12 +40,4 @@ export interface Ray {
   direction: Vec3;
   length: number | null;
   time: number;
-}
-
-export interface Vec2 {
-  x: number;
-  y: number;
-}
-export interface Vec3 extends Vec2 {
-  z: number;
 }

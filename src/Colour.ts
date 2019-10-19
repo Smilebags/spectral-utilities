@@ -1,4 +1,5 @@
-import { Vec3 } from "./types/index.js";
+import { Vec3 } from "./Vec.js";
+
 import ColourConverter from "./ColourConverter.js";
 
 export type ColourSpace = 'REC.709' | 'XYZ';
@@ -24,26 +25,26 @@ export default class Colour {
     const totalZ = colours
       .map(colour => colour.triplet.x)
       .reduce((total, current) => total + current, 0);
-    return new Colour({
-      x: totalX / colours.length,
-      y: totalY / colours.length,
-      z: totalZ / colours.length,
-    }, colours[0].colourSpace);
+    return new Colour(new Vec3(
+      totalX / colours.length,
+      totalY / colours.length,
+      totalZ / colours.length,
+    ), colours[0].colourSpace);
   }
 
   multiply(colour: Colour | number): Colour {
     if (typeof colour === 'number') {
-      return new Colour({
-        x: this.triplet.x * colour,
-        y: this.triplet.y * colour,
-        z: this.triplet.z * colour,
-      }, this.colourSpace);
+      return new Colour(new Vec3(
+        this.triplet.x * colour,
+        this.triplet.y * colour,
+        this.triplet.z * colour,
+      ), this.colourSpace);
     }
-    return new Colour({
-      x: this.triplet.x * colour.triplet.x,
-      y: this.triplet.y * colour.triplet.y,
-      z: this.triplet.z * colour.triplet.z,
-    }, this.colourSpace);
+    return new Colour(new Vec3(
+      this.triplet.x * colour.triplet.x,
+      this.triplet.y * colour.triplet.y,
+      this.triplet.z * colour.triplet.z,
+    ), this.colourSpace);
   }
 
   toRec709(): Colour {

@@ -1,4 +1,5 @@
-import { Film, Radiance, Vec2 } from "./types/index.js";
+import { Film, Radiance } from "./types/index.js";
+import { Vec2 } from "./Vec.js";
 import CanvasOutput from "./CanvasOutput.js";
 import { CameraSample } from "./RandomSampler.js";
 import Colour from "./Colour.js";
@@ -11,7 +12,7 @@ export default class BasicFilm implements Film {
   coordsFromIndex(index: number): Vec2 {
     const x = index % this.output.width;
     const y = Math.floor(index / this.output.width);
-    return {x, y};
+    return new Vec2(x, y);
   }
 
   getBinIndex(sample: CameraSample): number {

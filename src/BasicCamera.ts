@@ -1,4 +1,5 @@
-import { Camera, Ray, Film, Vec3, Radiance } from "./types/index.js";
+import { Camera, Ray, Film, Radiance } from "./types/index.js";
+import { Vec3 } from "./Vec.js";
 import { CameraSample } from "./RandomSampler.js";
 
 export default class BasicCamera implements Camera {
@@ -9,6 +10,7 @@ export default class BasicCamera implements Camera {
   ) {}
 
   getRay(sample: CameraSample): Ray {
+    const planeCenter = this.origin.add(this.direction);
     // get the sensor position based on the sample filmPos
     //   by interpolating from top left
     // get direction from origin to sensor pos
