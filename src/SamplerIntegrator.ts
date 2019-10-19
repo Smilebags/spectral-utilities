@@ -11,18 +11,22 @@ export default class SamplerIntegrator {
   preprocess() {}
 
   render(scene: Scene) {
-    const sample = this.sampler.getCameraSample();
-    const cameraRay = this.camera.getRay(sample);
-    const raySpectrum = this.li(cameraRay);
-    const rayRadiances = this.sampleSpectrum(raySpectrum);
-    this.camera.recordRadiances(rayRadiances, sample);
-    requestAnimationFrame(() => this.render(scene));
+    for (let y = 0; y < 200; y++) {
+      for (let x = 0; x < 200; x++) {
+        const sample = this.sampler.getCameraSample();
+        const cameraRay = this.camera.getRay(sample);
+        const raySpectrum = this.li(cameraRay);
+        const rayRadiances = this.sampleSpectrum(raySpectrum);
+        this.camera.recordRadiances(rayRadiances, sample);
+      }
+    }
+    // requestAnimationFrame(() => this.render(scene));
   }
 
   li(ray: Ray): Spectrum {
     return {
       sample() {
-        return 1;
+        return ray.direction.x;
       }
     }
     // trace the ray through the scene and get all the interactions
@@ -31,7 +35,7 @@ export default class SamplerIntegrator {
 
   sampleSpectrum(raySpectrum: Spectrum): Radiance[] {
     return [{
-      wavelength: lerp(380, 730, Math.random()),
+      wavelength: lerp(380, 730, raySpectrum.sample(550)),
       intensity: 1,
     }];
     // sample the spectrum at x wavelengths based on configuration
