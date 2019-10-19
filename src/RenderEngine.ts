@@ -1,24 +1,20 @@
 import CanvasOutput from "./CanvasOutput.js";
 import Colour from "./Colour.js";
-import { lerp } from "./Util.js";
+import { Integrator, Scene } from "./types/index.js";
 
 export default class RenderEngine {
-  constructor(private canvasOutput: CanvasOutput) {}
+  constructor(
+    private canvasOutput: CanvasOutput,
+    private integrator: Integrator,
+    private scene: Scene,
+  ) {}
   render() {
-    const base = {x: 0.5, y: 0.5, z: 0.5};
+    const frameBuffer = this.integrator.render(this.scene);
     for (let y = 0; y < this.canvasOutput.height; y++) {
-      const mixLevel = y / this.canvasOutput.height;
       for (let x = 0; x < this.canvasOutput.width; x++) {
-        const progress = x / this.canvasOutput.width;
-        const wavelength = lerp(380, 730, progress);
-        const colour = Colour.fromWavelength(wavelength);
-        const recColour = colour.toRec709();
-        const mixedColour = {
-          x: lerp(recColour.triplet.x, base.x, mixLevel),
-          y: lerp(recColour.triplet.y, base.y, mixLevel),
-          z: lerp(recColour.triplet.z, base.z, mixLevel),
-        };
-        this.canvasOutput.setPixel(mixedColour, {x, y});
+        const xyzColour = new Colour(frameBuffer.get(x, y), 'XYZ');
+        const recColour = xyzColour.toRec709();
+        this.canvasOutput.setPixel(recColour.triplet, {x, y});
       }
     }
     this.canvasOutput.redraw();

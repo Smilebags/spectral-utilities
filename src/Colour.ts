@@ -14,6 +14,38 @@ export default class Colour {
     return new Colour(triplet, 'XYZ');
   }
 
+  static fromAverage(colours: Colour[]): Colour {
+    const totalX = colours
+      .map(colour => colour.triplet.x)
+      .reduce((total, current) => total + current, 0);
+    const totalY = colours
+      .map(colour => colour.triplet.x)
+      .reduce((total, current) => total + current, 0);
+    const totalZ = colours
+      .map(colour => colour.triplet.x)
+      .reduce((total, current) => total + current, 0);
+    return new Colour({
+      x: totalX / colours.length,
+      y: totalY / colours.length,
+      z: totalZ / colours.length,
+    }, colours[0].colourSpace);
+  }
+
+  multiply(colour: Colour | number): Colour {
+    if (typeof colour === 'number') {
+      return new Colour({
+        x: this.triplet.x * colour,
+        y: this.triplet.y * colour,
+        z: this.triplet.z * colour,
+      }, this.colourSpace);
+    }
+    return new Colour({
+      x: this.triplet.x * colour.triplet.x,
+      y: this.triplet.y * colour.triplet.y,
+      z: this.triplet.z * colour.triplet.z,
+    }, this.colourSpace);
+  }
+
   toRec709(): Colour {
     if (this.colourSpace !== 'XYZ') {
       throw 'Not supported';

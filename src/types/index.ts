@@ -1,43 +1,44 @@
-export interface RenderContext {
-  materialStore: MaterialStore;
-  scene: Scene;
-  camera: Camera;
-  integrator: Integrator;
-}
+import { CameraSample } from "../RandomSampler";
 
 export interface Integrator {
-  castRays(count: number): Ray[];
-  sampleRays(rays: Ray[]): Sample[];
-  binSamples(samples: Sample[]): PixelMap<Sample[]>;
-  downsampleBin(bins: PixelMap<Sample[]>): PixelMap<Vec3>;
+  render(scene: Scene): FrameBuffer<Vec3>
 }
 
-export interface PixelMap<T> {
+export interface FrameBuffer<T> {
   get(x: number, y: number): T;
 }
 
-export interface Sample {
-  wavelength: number;
-  intensity: number;
-}
-
-export interface Ray {
-  pos: Vec3;
-  dir: Vec3;
-  dist: number;
-}
-
-export interface MaterialStore {
-  get(name: string): Material;
-}
-
-export interface Material {
+export interface Sampler {
+  get1D(): number;
+  get2D(): Vec2;
 }
 
 export interface Scene {
 }
 
 export interface Camera {
+  getRay(cameraSample: CameraSample): Ray;
+  recordRadiances(radiances: Radiance[], sample: CameraSample): void;
+}
+
+export interface Film {
+  splat(radiances: Radiance[], sample: CameraSample): void;
+}
+
+export interface Spectrum {
+  sample(wavelength: number): number;
+}
+
+export interface Radiance {
+  wavelength: number;
+  intensity: number;
+}
+
+export interface Ray {
+  origin: Vec3;
+  direction: Vec3;
+  length: number | null;
+  time: number;
 }
 
 export interface Vec2 {
