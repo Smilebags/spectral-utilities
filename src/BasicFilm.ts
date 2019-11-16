@@ -6,7 +6,13 @@ import Colour from "./Colour.js";
 
 export default class BasicFilm implements Film {
   private bins: Radiance[][] = Array(this.output.width * this.output.height);
-  constructor(private output: CanvasOutput) {
+  private size: Vec2;
+  constructor(
+    private output: CanvasOutput,
+    width: number = 100,
+    height: number = 100,
+  ) {
+    this.size = new Vec2(width, height);
   }
 
   coordsFromIndex(index: number): Vec2 {
@@ -15,16 +21,22 @@ export default class BasicFilm implements Film {
     return new Vec2(x, y);
   }
 
-  getBinIndex(sample: CameraSample): number {
-    const xPos = Math.floor(sample.filmPos.x * this.output.width);
-    const yPos = Math.floor(sample.filmPos.y * this.output.height);
+  getBinIndex(filmPos: Vec2): number {
+    const xPos = Math.floor(filmPos.x * this.output.width);
+    const yPos = Math.floor(filmPos.y * this.output.height);
     const index = (yPos * this.output.width) + xPos;
     this.bins[index] = this.bins[index] || [];
     return index;
   }
 
-  splat(radiances: Radiance[], sample: CameraSample) {
-    const index = this.getBinIndex(sample);
+  getFilmPosition(pixel: Vec2, subpixelPosition: Vec2) {
+    const totalPixelPosition = pixel.add(subpixelPosition);
+    return totalPixelPosition.divide(this.size);
+  }
+
+  splat(radiances: Radiance[], sample: CameraSample, pixel: Vec2) {
+    const filmPos = this.getFilmPosition(pixel, sample.filmPos);
+    const index = this.getBinIndex(filmPos);
     this.bins[index].push(...radiances);
     this.updatePixel(index);
   }

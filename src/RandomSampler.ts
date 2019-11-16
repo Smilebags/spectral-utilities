@@ -22,7 +22,7 @@ export default class RandomSampler implements Sampler {
   }
   getCameraSample(): CameraSample {
     return {
-      filmPos: this.get2D(),
+      filmPos: this.get2D(), // new Vec2(0.5, 0.5),//
       time: this.get1D(),
       lensPos: this.get2D(),
     };

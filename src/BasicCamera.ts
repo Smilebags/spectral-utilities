@@ -1,5 +1,5 @@
 import { Camera, Ray, Film, Radiance } from "./types/index.js";
-import { Vec3 } from "./Vec.js";
+import { Vec3, Vec2 } from "./Vec.js";
 import { CameraSample } from "./RandomSampler.js";
 
 export default class BasicCamera implements Camera {
@@ -16,7 +16,8 @@ export default class BasicCamera implements Camera {
     this.direction = direction.normalise();
   }
 
-  getRay(sample: CameraSample): Ray {
+  getRay(sample: CameraSample, pixel: Vec2): Ray {
+    const filmPosition = this.film.getFilmPosition(pixel, sample.filmPos);
     const right = this.direction.cross(this.up);
     const up = right.cross(this.direction);
     // determine the center of the near plane
@@ -27,10 +28,10 @@ export default class BasicCamera implements Camera {
       .subtract(down.multiply(0.5))
       .subtract(right.multiply(0.5));
     const filmPos = topLeft
-      .add(right.multiply(sample.filmPos.x))
-      .add(down.multiply(sample.filmPos.y));
+      .add(right.multiply(filmPosition.x))
+      .add(down.multiply(filmPosition.y));
 
-    const direction = filmPos.subtract(this.origin);
+    const direction = filmPos.subtract(this.origin).normalise();
     return {
       origin: this.origin,
       direction,
@@ -39,7 +40,7 @@ export default class BasicCamera implements Camera {
     };
   }
 
-  recordRadiances(radiances: Radiance[], sample: CameraSample) {
-    this.film.splat(radiances, sample);
+  recordRadiances(radiances: Radiance[], sample: CameraSample, pixel: Vec2) {
+    this.film.splat(radiances, sample, pixel);
   }
 }

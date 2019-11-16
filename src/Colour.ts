@@ -20,10 +20,10 @@ export default class Colour {
       .map(colour => colour.triplet.x)
       .reduce((total, current) => total + current, 0);
     const totalY = colours
-      .map(colour => colour.triplet.x)
+      .map(colour => colour.triplet.y)
       .reduce((total, current) => total + current, 0);
     const totalZ = colours
-      .map(colour => colour.triplet.x)
+      .map(colour => colour.triplet.z)
       .reduce((total, current) => total + current, 0);
     return new Colour(new Vec3(
       totalX / colours.length,

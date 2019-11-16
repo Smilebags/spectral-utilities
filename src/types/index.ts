@@ -15,15 +15,35 @@ export interface Sampler {
 }
 
 export interface Scene {
+  intersect(ray: Ray): SurfaceInteraction | null;
 }
 
+export interface Primitive {
+  // worldBound(): Vec3Bounds;
+  intersect(ray: Ray): SurfaceInteraction | null;
+  // IntersectP(const Ray &r);
+  // getMaterial(): Material;
+  // ComputeScatteringFunctions(): SurfaceInteraction;
+}
+
+export interface Shape {
+  intersect(ray: Ray): number | null;
+}
+
+export interface Material {}
+
+export interface Vec3Bounds {}
+
+export interface SurfaceInteraction {}
+
 export interface Camera {
-  getRay(cameraSample: CameraSample): Ray;
-  recordRadiances(radiances: Radiance[], sample: CameraSample): void;
+  getRay(cameraSample: CameraSample, pixel: Vec2): Ray;
+  recordRadiances(radiances: Radiance[], sample: CameraSample, pixel: Vec2): void;
 }
 
 export interface Film {
-  splat(radiances: Radiance[], sample: CameraSample): void;
+  splat(radiances: Radiance[], sample: CameraSample, pixel: Vec2): void;
+  getFilmPosition(pixel: Vec2, subpixelPosition: Vec2): Vec2;
 }
 
 export interface Spectrum {

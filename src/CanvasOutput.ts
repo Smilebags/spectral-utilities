@@ -5,8 +5,8 @@ export default class CanvasOutput {
   private imageData: ImageData;
   constructor(
     private canvasEl: HTMLCanvasElement,
-    public width: number = 200,
-    public height: number = 200,
+    public width: number = 100,
+    public height: number = 100,
     private gamma = 2.2,
   ) {
     this.canvasEl.height = height;
