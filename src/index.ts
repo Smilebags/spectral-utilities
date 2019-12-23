@@ -25,12 +25,14 @@ const camera = new BasicCamera(
 );
 const sampler = new RandomSampler();
 const vertices: Vec3[] = [
-  new Vec3(0, 0, -3),
-  new Vec3(0, 1, -3),
-  new Vec3(1, 0, -3),
+  new Vec3(-0.5, -0.5, -3),
+  new Vec3(-0.5, 0.5, -3),
+  new Vec3(0.5, -0.5, -3),
+  new Vec3(0.5, 0.5, -3),
 ];
 const faces: [number, number, number][] = [
   [0, 1, 2],
+  [1, 2, 3],
 ];
 const shape = new BasicShape(vertices, faces);
 const shapePrimitive = new ShapePrimitive(shape, {});
