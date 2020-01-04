@@ -15,6 +15,7 @@ export default class CanvasOutput {
     this.imageData = new ImageData(width, height);
     this.imageData.data.fill(255);
     this.redraw();
+    setInterval(() => this.redraw(), 50);
   }
 
   setPixel(color: Vec3, coords: Vec2) {

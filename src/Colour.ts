@@ -47,6 +47,14 @@ export default class Colour {
     ), this.colourSpace);
   }
 
+  add(colour: Colour): Colour {
+    return new Colour(new Vec3(
+      this.triplet.x + colour.triplet.x,
+      this.triplet.y + colour.triplet.y,
+      this.triplet.z + colour.triplet.z,
+    ), this.colourSpace);
+  }
+
   toRec709(): Colour {
     if (this.colourSpace !== 'XYZ') {
       throw 'Not supported';

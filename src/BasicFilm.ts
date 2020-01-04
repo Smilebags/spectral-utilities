@@ -1,11 +1,13 @@
 import { Film, Radiance } from "./types/index.js";
-import { Vec2 } from "./Vec.js";
+import { Vec2, Vec3 } from "./Vec.js";
 import CanvasOutput from "./CanvasOutput.js";
 import { CameraSample } from "./RandomSampler.js";
 import Colour from "./Colour.js";
+import { mapValue } from "./Util.js";
 
 export default class BasicFilm implements Film {
   private bins: Radiance[][] = Array(this.output.width * this.output.height);
+  private xyzBuffer: Colour[] = Array(this.output.width * this.output.height)
   private size: Vec2;
   private exposure = 1;
 
@@ -20,12 +22,14 @@ export default class BasicFilm implements Film {
     exposureEl.type = 'range';
     exposureEl.value = '1';
     exposureEl.min = '0';
-    exposureEl.max = '3';
-    exposureEl.step = '0.01';
+    exposureEl.max = '2';
+    exposureEl.step = '0.001';
     exposureEl.style.width = '100px';
-    exposureEl.addEventListener('change', (e) => {
+    exposureEl.addEventListener('input', (e) => {
       //@ts-ignore
-      this.exposure = Number(e.target!.value);
+      const exposureSliderPos = Number(e.target!.value);
+      const ev = mapValue(exposureSliderPos, 0, 2, -10, 10);
+      this.exposure = 2 ** ev;
       this.repaint();
     });
     document.body.appendChild(exposureEl);
@@ -59,19 +63,32 @@ export default class BasicFilm implements Film {
   splat(radiances: Radiance[], sample: CameraSample, pixel: Vec2) {
     const filmPos = this.getFilmPosition(pixel, sample.filmPos);
     const index = this.getBinIndex(filmPos);
-    this.bins[index].push(...radiances);
+    // this.bins[index].push(...radiances);
+
+
+    const xyzs = radiances.map(radiance => Colour
+      .fromWavelength(radiance.wavelength)
+      .multiply(radiance.intensity)
+    );
+    const summedXyz = Colour.fromAverage(xyzs);
+
+    this.xyzBuffer[index] = this.xyzBuffer[index] || new Colour(new Vec3(0, 0, 0,), 'XYZ');
+    this.xyzBuffer[index] = this.xyzBuffer[index].add(summedXyz);
     this.updatePixel(index);
   }
 
   updatePixel(index: number) {
-    const binXYZs = this.bins[index]
-      .map(radiance => Colour
-        .fromWavelength(radiance.wavelength)
-        .multiply(radiance.intensity)
-      );
-    const averageColour = Colour.fromAverage(binXYZs);
+    // const binXYZs = this.bins[index]
+    //   .map(radiance => Colour
+    //     .fromWavelength(radiance.wavelength)
+    //     .multiply(radiance.intensity)
+    //   );
+    // const averageColour = Colour.fromAverage(binXYZs);
+    const averageColour = this.xyzBuffer[index];
     const scaled = averageColour.multiply(this.exposure);
     this.output.setPixel(scaled.toRec709().triplet, this.coordsFromIndex(index));
-    this.output.redraw();
+    // if (redraw) {
+    //   this.output.redraw();
+    // }
   }
 }
