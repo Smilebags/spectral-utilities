@@ -20,9 +20,22 @@ export default class CanvasOutput {
 
   setPixel(color: Vec3, coords: Vec2) {
     const offset = ((coords.y * this.width) + coords.x) * 4;
+    if (
+      color.x >= 1 ||
+      color.y >= 1 ||
+      color.z >= 1
+    ) {
+      this.imageData.data[offset + 0] = 0;
+      this.imageData.data[offset + 1] = 0;
+      this.imageData.data[offset + 2] = 0;
+      return;
+    }
     this.imageData.data[offset + 0] = (color.x ** (1 / this.gamma)) * 255;
     this.imageData.data[offset + 1] = (color.y ** (1 / this.gamma)) * 255;
     this.imageData.data[offset + 2] = (color.z ** (1 / this.gamma)) * 255;
+    // this.imageData.data[offset + 0] = color.x <= 1 ? (color.x ** (1 / this.gamma)) * 255 : 0;
+    // this.imageData.data[offset + 1] = color.y <= 1 ? (color.y ** (1 / this.gamma)) * 255 : 0;
+    // this.imageData.data[offset + 2] = color.z <= 1 ? (color.z ** (1 / this.gamma)) * 255 : 0;
   }
 
   redraw() {
