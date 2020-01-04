@@ -32,11 +32,14 @@ export default class SamplerIntegrator {
     ]);
     const d65Illuminant = new SPDSpectrum(d65spd, 'zero', 0.2);
     const aIlluminant = new SPDSpectrum(aspd, 'zero', 0.2);
+    const nearUVIlluminant: Spectrum = this.getGaussianSpectrum(370, 10, 1000);
+
     const illuminants = [
       // {sample: (wavelength: number) => 2 ** 1},
       // {sample: (wavelength: number) => 2 ** 5},
       aIlluminant,
       d65Illuminant,
+      nearUVIlluminant,
     ];
     const funkySpectrum: Spectrum = {
       sample: (wavelength: number) => {
@@ -44,7 +47,7 @@ export default class SamplerIntegrator {
         return 4 * ((progress - 0.5) ** 2);
       },
     };
-    const smoothGreySpectrum: Spectrum = this.getGaussianSpectrum(550, 600, 0.5);
+    const smoothGreySpectrum: Spectrum = this.getGaussianSpectrum(550, 900, 0.5);
     const smoothGreenSpectrum: Spectrum = this.getGaussianSpectrum(550, 20, 0.8);
     const smoothPurpleSpectrum: Spectrum = this.getGaussianSpectrum(420, 60, 0.9);
     const smoothRedSpectrum: Spectrum = this.getGaussianSpectrum(720, 40, 0.95);
@@ -56,6 +59,7 @@ export default class SamplerIntegrator {
       smoothGreySpectrum,
       compositePurpleSpectrum,
       smoothPurpleSpectrum,
+      smoothGreenSpectrum,
       smoothRedSpectrum,
     ];
     for (let sampleIndex = 0; sampleIndex < this.sampleCount; sampleIndex++) {
