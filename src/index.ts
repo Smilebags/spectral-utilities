@@ -14,9 +14,12 @@ const cameraPos = new Vec3(0, 0, 0);
 const cameraDir = new Vec3(0, 0, 1);
 const cameraUp = new Vec3(0, 1, 0);
 
+const width = 200;
+const height = 100;
+
 const canvasEl = document.querySelector('canvas')!;
-const canvasOutput = new CanvasOutput(canvasEl);
-const film = new BasicFilm(canvasOutput);
+const canvasOutput = new CanvasOutput(canvasEl, width, height);
+const film = new BasicFilm(canvasOutput, width, height);
 const camera = new BasicCamera(
   cameraPos,
   cameraDir,
@@ -38,7 +41,7 @@ const shape = new BasicShape(vertices, faces);
 const shapePrimitive = new ShapePrimitive(shape, {});
 const aggregate = new BasicAggregate([shapePrimitive]);
 const scene = new BasicScene(aggregate);
-const integrator = new SamplerIntegrator(camera, sampler);
+const integrator = new SamplerIntegrator(camera, sampler, 1, width, height);
 integrator.render(scene);
 
 const testRay: Ray = {

@@ -24,7 +24,8 @@ export default class BasicFilm implements Film {
     exposureEl.min = '0';
     exposureEl.max = '2';
     exposureEl.step = '0.001';
-    exposureEl.style.width = '100px';
+    exposureEl.style.width = '400px';
+    exposureEl.style.display = 'block';
     exposureEl.addEventListener('input', (e) => {
       //@ts-ignore
       const exposureSliderPos = Number(e.target!.value);
@@ -63,7 +64,7 @@ export default class BasicFilm implements Film {
   splat(radiances: Radiance[], sample: CameraSample, pixel: Vec2) {
     const filmPos = this.getFilmPosition(pixel, sample.filmPos);
     const index = this.getBinIndex(filmPos);
-    // this.bins[index].push(...radiances);
+    this.bins[index].push(...radiances);
 
 
     const xyzs = radiances.map(radiance => Colour
@@ -86,7 +87,8 @@ export default class BasicFilm implements Film {
     // const averageColour = Colour.fromAverage(binXYZs);
     const averageColour = this.xyzBuffer[index];
     const scaled = averageColour.multiply(this.exposure);
-    this.output.setPixel(scaled.toRec709().triplet, this.coordsFromIndex(index));
+    const rgb = scaled.toRec709();
+    this.output.setPixel(rgb.triplet, this.coordsFromIndex(index));
     // if (redraw) {
     //   this.output.redraw();
     // }
