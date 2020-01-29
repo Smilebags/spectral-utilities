@@ -3,19 +3,14 @@ import RandomSampler from "./RandomSampler.js";
 import { lerp, nextFrame, mapValue } from "./Util.js";
 import { Vec2 } from "./Vec.js";
 import SPDSpectrum from "./SPDSpectrum.js";
+import parabolic from "./Spectrum/Parabolic.js";
 
 
 const totalBounces = 20;
 
 
 
-function parabolic(center: number, width: number, peak: number = 1) {
-  return (sample: number) => {
-    const distance = sample - center;
-    const scaled = distance / width;
-    return peak / (1 + (scaled **2));
-  };
-}
+
 // http://www.pbr-book.org/3ed-2018/Introduction/Class%20Relationships.svg
 export default class SamplerIntegrator {
   constructor(
