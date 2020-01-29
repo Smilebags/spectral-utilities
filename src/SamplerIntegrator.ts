@@ -22,6 +22,8 @@ export default class SamplerIntegrator {
     private camera: Camera,
     private sampler: RandomSampler,
     private sampleCount = 1,
+    private width = 100,
+    private height = 100,
   ) {}
   preprocess() {}
 
@@ -32,12 +34,12 @@ export default class SamplerIntegrator {
     ]);
     const d65Illuminant = new SPDSpectrum(d65spd, 'zero', 0.2);
     const aIlluminant = new SPDSpectrum(aspd, 'zero', 0.2);
-    const nearUVIlluminant: Spectrum = this.getGaussianSpectrum(370, 10, 1000);
+    const nearUVIlluminant: Spectrum = this.getGaussianSpectrum(350, 10, 1000);
 
     const illuminants = [
       // {sample: (wavelength: number) => 2 ** 1},
       // {sample: (wavelength: number) => 2 ** 5},
-      aIlluminant,
+      // aIlluminant,
       d65Illuminant,
       nearUVIlluminant,
     ];
@@ -47,34 +49,34 @@ export default class SamplerIntegrator {
         return 4 * ((progress - 0.5) ** 2);
       },
     };
-    const smoothGreySpectrum: Spectrum = this.getGaussianSpectrum(550, 900, 0.5);
+    const smoothGreySpectrum: Spectrum = this.getGaussianSpectrum(550, 900, 0.9);
     const smoothGreenSpectrum: Spectrum = this.getGaussianSpectrum(550, 20, 0.8);
     const smoothPurpleSpectrum: Spectrum = this.getGaussianSpectrum(420, 60, 0.9);
-    const smoothRedSpectrum: Spectrum = this.getGaussianSpectrum(720, 40, 0.95);
+    const smoothRedSpectrum: Spectrum = this.getGaussianSpectrum(700, 70, 0.99);
     const compositePurpleSpectrum: Spectrum = {
       sample: wavelength => parabolic(400, 50, 0.95)(wavelength) + parabolic(600, 20, 0.2)(wavelength)
     };
     const colourSpectrums = [
       // funkySpectrum,
       smoothGreySpectrum,
-      compositePurpleSpectrum,
-      smoothPurpleSpectrum,
       smoothGreenSpectrum,
+      compositePurpleSpectrum,
       smoothRedSpectrum,
+      smoothPurpleSpectrum,
     ];
     for (let sampleIndex = 0; sampleIndex < this.sampleCount; sampleIndex++) {
-      for (let y = 0; y < 100; y++) {
-        const yProgress = y / 100;
+      for (let y = 0; y < this.height; y++) {
+        const yProgress = y / this.height;
         const numberOfBounces = Math.floor(yProgress * totalBounces) + 1;
         // const numberOfBounces = (yProgress * totalBounces) + 1;
-        for (let x = 0; x < 100; x++) {
+        for (let x = 0; x < this.width; x++) {
           const pixel = new Vec2(x, y);
-          const colourWidth = 100 / colourSpectrums.length;
+          const colourWidth = this.width / colourSpectrums.length;
           const colourWidthProgress = (x % colourWidth) / colourWidth;
           const illuminantOption = Math.floor(colourWidthProgress * illuminants.length);
           const illuminant: Spectrum = illuminants[illuminantOption];
           const sample = this.sampler.getCameraSample();
-          const colorSpectrum = colourSpectrums[Math.floor((x*colourSpectrums.length)/100)];
+          const colorSpectrum = colourSpectrums[Math.floor((x*colourSpectrums.length)/this.width)];
           const bouncedSpectrum: Spectrum = {
             sample: wavelength => (colorSpectrum.sample(wavelength) ** numberOfBounces) * illuminant.sample(wavelength),
           };
