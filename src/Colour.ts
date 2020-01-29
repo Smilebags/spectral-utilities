@@ -1,6 +1,7 @@
 import { Vec3 } from "./Vec.js";
 
 import ColourConverter from "./ColourConverter.js";
+import { clamp, lerp } from "./Util.js";
 
 export type ColourSpace = 'REC.709' | 'XYZ';
 
@@ -55,11 +56,29 @@ export default class Colour {
     ), this.colourSpace);
   }
 
+  lerp(colour: Colour, mix: number): Colour {
+    return new Colour(new Vec3(
+      lerp(this.triplet.x, colour.triplet.x, mix),
+      lerp(this.triplet.y, colour.triplet.y, mix),
+      lerp(this.triplet.z, colour.triplet.z, mix),
+    ), this.colourSpace);
+  }
+
   toRec709(): Colour {
+    if (this.colourSpace == 'REC.709') {
+      return this;
+    }
     if (this.colourSpace !== 'XYZ') {
       throw 'Not supported';
     }
     const tripletInRec709 = ColourConverter.xyzToRec709(this.triplet);
     return new Colour(tripletInRec709, 'REC.709');
+  }
+
+  clamp(): Colour {
+    this.triplet.x = clamp(this.triplet.x, 0, 1);
+    this.triplet.y = clamp(this.triplet.y, 0, 1);
+    this.triplet.z = clamp(this.triplet.z, 0, 1);
+    return this;
   }
 }
