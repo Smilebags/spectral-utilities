@@ -1,5 +1,5 @@
-import { Spectrum } from "./types/index";
-import { mapValue, lerp } from "./Util.js";
+import { Spectrum } from "../types/index";
+import { mapValue, lerp } from "../Util.js";
 
 
 export default class SPDSpectrum implements Spectrum {

@@ -2,7 +2,7 @@ import { Camera, Scene, Ray, Spectrum, Radiance } from "./types/index.js";
 import RandomSampler from "./RandomSampler.js";
 import { lerp, nextFrame, mapValue } from "./Util.js";
 import { Vec2 } from "./Vec.js";
-import SPDSpectrum from "./SPDSpectrum.js";
+import SPDSpectrum from "./Spectrum/SPDSpectrum.js";
 import parabolic from "./Spectrum/Parabolic.js";
 
 
@@ -24,8 +24,8 @@ export default class SamplerIntegrator {
 
   async render(scene: Scene) {
     const [d65spd, aspd] = await Promise.all([
-      fetch('/d65.spd').then(res => res.text()),
-      fetch('/a.spd').then(res => res.text()),
+      fetch('/static/d65.spd').then(res => res.text()),
+      fetch('/static/a.spd').then(res => res.text()),
     ]);
     const d65Illuminant = new SPDSpectrum(d65spd, 'zero', 0.2);
     const aIlluminant = new SPDSpectrum(aspd, 'zero', 0.2);
