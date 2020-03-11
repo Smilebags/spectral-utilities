@@ -7,6 +7,7 @@ export default class CanvasOutput {
     private canvasEl: HTMLCanvasElement,
     public width: number = 100,
     public height: number = 100,
+    private clipTooBright = false,
     private gamma = 2.2,
   ) {
     this.canvasEl.height = height;
@@ -21,9 +22,10 @@ export default class CanvasOutput {
   setPixel(color: Vec3, coords: Vec2) {
     const offset = ((coords.y * this.width) + coords.x) * 4;
     if (
+      this.clipTooBright && (
       color.x >= 1 ||
       color.y >= 1 ||
-      color.z >= 1
+      color.z >= 1 )
     ) {
       this.imageData.data[offset + 0] = 0;
       this.imageData.data[offset + 1] = 0;

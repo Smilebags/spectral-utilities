@@ -8,27 +8,18 @@ import { mapValue } from "../../Util.js";
 import parabolic from "../../Spectrum/Parabolic.js";
 import SPDSpectrum from "../../Spectrum/SPDSpectrum.js";
 
+const numberofBounces = 10;
+const colourPatchHeight = 4;
+const colourPatchWidth = 4;
+
+(async () => {
+
 const cameraPos = new Vec3(0, 0, 0);
 const cameraDir = new Vec3(0, 0, 1);
 const cameraUp = new Vec3(0, 1, 0);
 
-const numberOfLights = 3;
-const numberofColours = 6;
-const numberofBounces = 10;
-const colourPatchHeight = 4;
-const colourPatchWidth = 8;
-const width = numberOfLights * colourPatchWidth;
-const height = numberofColours * numberofBounces * colourPatchHeight;
 
-const canvasEl = document.querySelector('canvas')!;
-const canvasOutput = new CanvasOutput(canvasEl, width, height);
-const film = new BasicFilm(canvasOutput, width, height);
-const camera = new BasicCamera(
-  cameraPos,
-  cameraDir,
-  cameraUp,
-  film,
-);
+
 
 const getGaussianSpectrum = (center: number, width: number, peak: number = 2) => {
   return {
@@ -43,8 +34,13 @@ const funkySpectrum: Spectrum = {
   },
 };
 
+const primariesWidth = 100;
+const primariesMaxReflectivity = 0.8;
+const red: Spectrum = getGaussianSpectrum(630, primariesWidth, primariesMaxReflectivity);
+const green: Spectrum = getGaussianSpectrum(532, primariesWidth, primariesMaxReflectivity);
+const blue: Spectrum = getGaussianSpectrum(467, primariesWidth, primariesMaxReflectivity);
+
 const white: Spectrum = { sample: () => 0.8 };
-const smoothGreenSpectrum: Spectrum = getGaussianSpectrum(550, 20, 0.8);
 const smoothPurpleSpectrum: Spectrum = getGaussianSpectrum(420, 60, 0.9);
 const smoothRedSpectrum: Spectrum = getGaussianSpectrum(700, 70, 0.99);
 const compositePurpleSpectrum: Spectrum = {
@@ -53,28 +49,55 @@ const compositePurpleSpectrum: Spectrum = {
 
 const colours = [
   white,
-  smoothGreenSpectrum,
+  red,
+  green,
+  blue,
   compositePurpleSpectrum,
   smoothRedSpectrum,
   smoothPurpleSpectrum,
   funkySpectrum,
 ];
 
-(async () => {
+
 
   const [d65spd, aspd] = await Promise.all([
     fetch('/static/d65.spd').then(res => res.text()),
     fetch('/static/a.spd').then(res => res.text()),
   ]);
-  const d65Illuminant = new SPDSpectrum(d65spd, 'zero', 2 ** -5);
-  const aIlluminant = new SPDSpectrum(aspd, 'zero', 2 ** -6);
-  const blueLight: Spectrum = getGaussianSpectrum(450, 50, 2 ** 2);
+  const d65Illuminant = new SPDSpectrum(d65spd, 'zero', 2 ** -7);
+  const aIlluminant = new SPDSpectrum(aspd, 'zero', 2 ** -8);
   
+  const lightPrimariesWidth = 20;
+  const redLight: Spectrum = getGaussianSpectrum(630, lightPrimariesWidth, 0.9);
+  const greenLight: Spectrum = getGaussianSpectrum(532, lightPrimariesWidth, 0.9);
+  const blueLight: Spectrum = getGaussianSpectrum(467, lightPrimariesWidth, 1);
   const illuminants = [
     d65Illuminant,
     aIlluminant,
+    redLight,
+    greenLight,
     blueLight,
+    d65Illuminant,
   ];
+
+
+// const width = numberOfLights * colourPatchWidth;
+// const height = numberofColours * numberofBounces * colourPatchHeight;
+const numberOfLights = illuminants.length;
+const numberofColours = colours.length;
+const width = colourPatchWidth * numberOfLights * numberofBounces;
+const height = colourPatchHeight * numberofColours;
+
+
+const canvasEl = document.querySelector('canvas')!;
+const canvasOutput = new CanvasOutput(canvasEl, width, height);
+const film = new BasicFilm(canvasOutput, width, height);
+const camera = new BasicCamera(
+  cameraPos,
+  cameraDir,
+  cameraUp,
+  film,
+);
 
   const integrator = new SelfReflectionViewer(camera, illuminants, colours, numberofBounces, colourPatchWidth, colourPatchHeight);
   integrator.render();

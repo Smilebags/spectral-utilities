@@ -42,10 +42,12 @@ export default class SelfReflectionViewer {
   ) {
     const centerOfPixelSample = {filmPos: new Vec2(0.5, 0.5)} as CameraSample;
 
-    const colourBlockOffset = colourIndex * this.bounceCount;
+    const illuminantBlockOffset = illuminantIndex * this.bounceCount;
     const bounceBlockOffset = currentBounce - 1;
-    const topOffset = (colourBlockOffset + bounceBlockOffset) * this.patchHeight;
-    const leftOffset = illuminantIndex * this.patchWidth;
+    // const topOffset = (colourBlockOffset + bounceBlockOffset) * this.patchHeight;
+    // const leftOffset = illuminantIndex * this.patchWidth;
+    const topOffset = colourIndex * this.patchHeight;
+    const leftOffset = (illuminantBlockOffset + bounceBlockOffset) * this.patchWidth;
     const origin = new Vec2(leftOffset, topOffset);
     for (let x = 0; x < this.patchWidth; x++) {
       for (let y = 0; y < this.patchHeight; y++) {
