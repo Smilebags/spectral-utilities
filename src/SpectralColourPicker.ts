@@ -1,10 +1,10 @@
-import CircleGradient from "../../Shapes/CircleGradient.js";
-import Dot from "../../Shapes/Dot.js";
-import { Vec2, Vec3 } from "../../Vec.js";
-import { Spectrum } from "../../types/index.js";
-import Colour from "../../Colour.js";
-import { mapValue } from "../../Util.js";
-import { ParabolicSpectrum } from "./ParabolicSpectrum.js";
+import CircleGradient from "./Shapes/CircleGradient.js";
+import Dot from "./Shapes/Dot.js";
+import { Vec2, Vec3 } from "./Vec.js";
+import { Spectrum } from "./types/index.js";
+import Colour from "./Colour.js";
+import { mapValue } from "./Util.js";
+import { ParabolicSpectrum } from "./Spectrum/ParabolicSpectrum.js";
 
 
 const shift = 0.2;
@@ -30,7 +30,7 @@ export class SpectralColourPicker {
   colourDot: Dot;
   baseSpectra: ParabolicSpectrum[] = [
     new ParabolicSpectrum(360, 10, 6),
-    new ParabolicSpectrum(500, 50, 1),
+    new ParabolicSpectrum(200, 50, 1),
   ];
   constructor(
     private canvas: HTMLCanvasElement,
@@ -111,7 +111,7 @@ export class SpectralColourPicker {
 
   jiggle() {
     this.baseSpectra.forEach(baseSpectrum => {
-      baseSpectrum.center += (Math.random() - 0.47) * 2;
+      baseSpectrum.center += (Math.random() - 0.45) * 2;
     });
   }
 
