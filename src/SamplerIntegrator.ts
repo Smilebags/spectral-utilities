@@ -9,8 +9,8 @@ export default class SamplerIntegrator {
     private camera: Camera,
     private sampler: RandomSampler,
     private sampleCount = 1,
-    private width = 100,
-    private height = 100,
+    private width = 30,
+    private height = 30,
   ) {}
 
   preprocess() {}

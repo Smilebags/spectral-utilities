@@ -29,8 +29,8 @@ export class SpectralColourPicker {
   spectrumCircle: CircleGradient;
   colourDot: Dot;
   baseSpectra: ParabolicSpectrum[] = [
-    new ParabolicSpectrum(360, 10, 6),
-    new ParabolicSpectrum(200, 50, 1),
+    new ParabolicSpectrum(460, 10, 6),
+    new ParabolicSpectrum(600, 50, 1),
   ];
   constructor(
     private canvas: HTMLCanvasElement,
@@ -126,7 +126,7 @@ export class SpectralColourPicker {
   }
 
   render(): void {
-    this.jiggle();
+    // this.jiggle();
     this.clear();
     this.ctx.save();
       this.ctx.translate(this.width / 2, this.height / 2);
@@ -136,6 +136,6 @@ export class SpectralColourPicker {
       this.colourDot.render(this.ctx);
       this.renderSpectrumPoints();
     this.ctx.restore();
-    requestAnimationFrame(() => this.render());
+    // requestAnimationFrame(() => this.render());
   }
 }

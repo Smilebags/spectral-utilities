@@ -10,12 +10,12 @@ import BasicAggregate from "../../BasicAggregate.js";
 import ShapePrimitive from "../../ShapePrimitive.js";
 import BasicShape from "../../BasicShape.js";
 
-const cameraPos = new Vec3(0, 0, 0);
-const cameraDir = new Vec3(0, 0, 1);
+const cameraPos = new Vec3(-0.8, 0, 0);
+const cameraDir = new Vec3(-0.4, 0, 1).normalise();
 const cameraUp = new Vec3(0, 1, 0);
 
-const width = 200;
-const height = 200;
+const width = 50;
+const height = 50;
 
 const canvasEl = document.querySelector('canvas')!;
 const canvasOutput = new CanvasOutput(canvasEl, width, height);
@@ -28,10 +28,10 @@ const camera = new BasicCamera(
 );
 const sampler = new RandomSampler();
 const vertices: Vec3[] = [
-  new Vec3(-0.5, -0.5, -3),
-  new Vec3(-0.5, 0.5, -3),
-  new Vec3(0.5, -0.5, -3),
-  new Vec3(0.5, 0.5, -3),
+  new Vec3(-0.5, -0.5, -2),
+  new Vec3(-0.5, 0.5, -2),
+  new Vec3(0.5, -0.5, -2),
+  new Vec3(0.5, 0.5, -2),
 ];
 const faces: [number, number, number][] = [
   [0, 1, 2],
@@ -44,14 +44,14 @@ const scene = new BasicScene(aggregate);
 const integrator = new SamplerIntegrator(camera, sampler, 2 ** 2, width, height);
 integrator.render(scene);
 
-const testRay: Ray = {
-  origin: new Vec3(0, 0, 0),
-  direction: new Vec3(0, 0, -1),
-  length: null,
-  time: 0,
-};
-let testIntersection = shape.intersect(testRay);
-console.log(testIntersection);
-testRay.direction = new Vec3(10, 0, 1).normalise();
-testIntersection = shape.intersect(testRay);
-console.log(testIntersection);
+// const testRay: Ray = {
+//   origin: new Vec3(0, 0, 0),
+//   direction: new Vec3(0, 0, -1),
+//   length: null,
+//   time: 0,
+// };
+// let testIntersection = shape.intersect(testRay);
+// console.log(testIntersection);
+// testRay.direction = new Vec3(10, 0, 1).normalise();
+// testIntersection = shape.intersect(testRay);
+// console.log(testIntersection);
