@@ -9,14 +9,23 @@ export default class CanvasOutput {
     public height: number = 100,
     private clipTooBright = false,
     private gamma = 2.2,
+    private background = 1,
   ) {
     this.canvasEl.height = height;
     this.canvasEl.width = width;
     this.context = this.canvasEl.getContext('2d')!;
     this.imageData = new ImageData(width, height);
-    this.imageData.data.fill(255);
-    this.redraw();
+    this.clear();
     setInterval(() => this.redraw(), 50);
+  }
+
+  clear(redraw = false) {
+    for (let i = 0; i < this.imageData.data.length; i++) {
+      this.imageData.data[i] = i % 4 === 3 ? 255 : this.background * 255;
+    }
+    if (redraw) { 
+      this.redraw();
+    }
   }
 
   setPixel(color: Vec3, coords: Vec2) {
