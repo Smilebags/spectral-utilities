@@ -38,7 +38,14 @@ export default class ColourConverter {
     const green = (-0.969266 * xyz.x) + (1.87601080 * xyz.y) + (0.04155600 * xyz.z);
     const blue  = (0.0556434 * xyz.x) + (-0.2040259 * xyz.y) + (1.05722520 * xyz.z);
     return new Vec3(red, green, blue);
-}
+  }
+
+  static xyzToxyY(xyz: Vec3): Vec3 {
+    const x = xyz.x / (xyz.x + xyz.y + xyz.z);
+    const y = xyz.y / (xyz.x + xyz.y + xyz.z);
+    const Y = xyz.y;
+    return new Vec3(x, y, Y);
+  }
 
   static wavelengthToXYZ: Vec3Lookup = [
     [380.0, new Vec3(0.0014, 0.0000, 0.0065)],

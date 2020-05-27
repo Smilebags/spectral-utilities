@@ -1,15 +1,26 @@
 import { Vec3 } from "./Vec.js";
 
 import ColourConverter from "./ColourConverter.js";
-import { clamp, lerp } from "./Util.js";
+import { clamp, lerp, mapValue } from "./Util.js";
+import { Spectrum } from "./types/index.js";
 
-export type ColourSpace = 'REC.709' | 'XYZ';
+export type ColourSpace = 'REC.709' | 'XYZ' | 'xyY';
 
 export default class Colour {
   constructor(
     public triplet: Vec3,
     public colourSpace: ColourSpace = 'REC.709',
   ) {}
+
+  static fromSpectrum(spectrum: Spectrum, resolution = 16, low = 380, high = 730): Colour {
+    const samples = new Array(resolution).fill(null).map((item, index) => {
+      const wavelength = mapValue(index, 0, resolution - 1, low, high);
+      const intensity = spectrum.sample(wavelength);
+      return Colour.fromWavelength(wavelength).multiply(intensity);
+    });
+    return Colour.fromAverage(samples);
+
+  }
 
   static fromWavelength(wavelength: number): Colour {
     const triplet: Vec3 = ColourConverter.tripletFromWavelength(wavelength);
@@ -64,6 +75,13 @@ export default class Colour {
     ), this.colourSpace);
   }
 
+  toxyY(): Colour {
+    if (this.colourSpace !== 'XYZ') {
+      throw 'Not supported';
+    }
+    const tripletInxyY = ColourConverter.xyzToxyY(this.triplet);
+    return new Colour(tripletInxyY, 'xyY');
+  }
   toRec709(): Colour {
     if (this.colourSpace == 'REC.709') {
       return this;
