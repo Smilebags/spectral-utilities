@@ -26,7 +26,7 @@ export interface Primitive {
   // ComputeScatteringFunctions(): SurfaceInteraction;
 }
 
-export interface Shape {
+export interface Hittable {
   intersect(ray: Ray): number | null;
 }
 
