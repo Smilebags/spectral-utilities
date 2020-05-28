@@ -1,4 +1,5 @@
 import { Vec3, Vec2 } from "./Vec.js";
+import Colour from "./Colour.js";
 
 export default class CanvasOutput {
   private context: CanvasRenderingContext2D;
@@ -17,6 +18,35 @@ export default class CanvasOutput {
     this.imageData = new ImageData(width, height);
     this.clear();
     setInterval(() => this.redraw(), 50);
+  }
+
+  drawLine(options: {lineWidth: number, from: Vec2, to: Vec2, color: Colour }): void {
+    const {
+      lineWidth, from, to, color
+    } = options;
+    this.context.save();
+
+    this.context.lineWidth = lineWidth * this.width;
+    const rgb = color.toRec709().clamp().triplet;
+    const rgbString = `rgb(${(rgb.x ** (1 / this.gamma)) * 255}, ${(rgb.y ** (1 / this.gamma)) * 255}, ${(rgb.z ** (1 / this.gamma)) * 255})`;
+    this.context.strokeStyle = rgbString;
+
+    const canvasFrom = this.uvToCanvasCoordinates(from);
+    const canvasTo = this.uvToCanvasCoordinates(to);
+
+    this.context.beginPath();
+    this.context.moveTo(canvasFrom.x, canvasFrom.y);
+    this.context.lineTo(canvasTo.x, canvasTo.y);
+    this.context.stroke();
+
+    this.context.restore();
+  }
+
+  private uvToCanvasCoordinates(uv: Vec2): Vec2 {
+    return new Vec2(
+      uv.x * this.width,
+      (1 - uv.y) * this.height,
+    );
   }
 
   clear(redraw = false) {

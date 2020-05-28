@@ -4,14 +4,23 @@ export class Vec2 {
     public y: number,
   ) {}
 
-  add(other: Vec2): Vec2 {
+  add(other: Vec2 | number): Vec2 {
+    if(typeof other === "number") {
+      return new Vec2(
+        this.x + other,
+        this.y + other,
+      );
+    }
     return new Vec2(
       this.x + other.x,
       this.y + other.y,
     );
   }
 
-  subtract(v: Vec2): Vec2 {
+  subtract(v: Vec2 | number): Vec2 {
+    if (typeof v === 'number') {
+      return new Vec2(this.x - v, this.y - v);
+    }
     return new Vec2(this.x - v.x, this.y - v.y);
   }
 

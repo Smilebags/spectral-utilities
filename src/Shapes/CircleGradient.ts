@@ -1,4 +1,7 @@
 import Colour from "../Colour.js";
+import CanvasOutput from "../CanvasOutput.js";
+import { Vec2 } from "../Vec.js";
+import { mapValue } from "../Util.js";
 
 export default class CircleGradient {
   constructor(
@@ -9,21 +12,33 @@ export default class CircleGradient {
     private lineWidth = 0.02,
   ) {}
 
-  render(ctx: CanvasRenderingContext2D): void {
-    ctx.save();
-    ctx.lineWidth = this.lineWidth;
+  render(ctx: CanvasOutput): void {
     for (let i = 0; i < this.steps; i++) {
-      const col = this.callback(i / this.steps);
-      const rgb = col.toRec709().clamp().triplet;
-      const rgbString = `rgb(${rgb.x * 255}, ${rgb.y * 255}, ${rgb.z * 255})`;
-      ctx.strokeStyle = rgbString;
-      const x = Math.sin((Math.PI * 2) * (i / this.steps));
-      const y = Math.cos((Math.PI * 2) * (i / this.steps));
-      ctx.beginPath();
-      ctx.moveTo(x * this.innerRadius, y * this.innerRadius);
-      ctx.lineTo(x * this.outerRadius, y * this.outerRadius);
-      ctx.stroke(); 
+      const color = this.callback(i / this.steps);
+      const x = mapValue(
+        Math.sin((Math.PI * 2) * (i / this.steps)),
+        -1,
+        1,
+        0,
+        1,
+      );
+      const y = mapValue(
+        Math.cos((Math.PI * 2) * (i / this.steps)),
+        -1,
+        1,
+        0,
+        1,
+      );
+      const xy = new Vec2(x, y);
+
+      const inner = xy.subtract(0.5).multiply(this.innerRadius).add(0.5);
+      const outer = xy.subtract(0.5).multiply(this.outerRadius).add(0.5);
+      ctx.drawLine({
+        color,
+        lineWidth: this.lineWidth,
+        from: new Vec2(inner.x, inner.y),
+        to: new Vec2(outer.x, outer.y),
+      });
     }
-    ctx.restore();
   }
 }
