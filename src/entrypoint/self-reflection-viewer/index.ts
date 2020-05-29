@@ -29,7 +29,7 @@ const getGaussianSpectrum = (center: number, width: number, peak: number = 2) =>
 
 const funkySpectrum: Spectrum = {
   sample: (wavelength: number) => {
-    const progress = mapValue(wavelength, 380, 730, 0, 1);
+    const progress = mapValue(wavelength, 360, 830, 0, 1);
     return 4 * ((progress - 0.5) ** 2);
   },
 };

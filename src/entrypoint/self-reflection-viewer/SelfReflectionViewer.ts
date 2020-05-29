@@ -66,8 +66,8 @@ export default class SelfReflectionViewer {
     }
     const radiances = wavelengths.map((wavelength) => {
       return {
-        wavelength: lerp(380, 730, wavelength),
-        intensity: raySpectrum.sample(lerp(380, 730, wavelength)),
+        wavelength: lerp(360, 830, wavelength),
+        intensity: raySpectrum.sample(lerp(360, 830, wavelength)),
       };
     });
     return radiances;

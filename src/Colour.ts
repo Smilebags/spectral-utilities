@@ -12,7 +12,7 @@ export default class Colour {
     public colourSpace: ColourSpace = 'REC.709',
   ) {}
 
-  static fromSpectrum(spectrum: Spectrum, resolution = 16, low = 380, high = 730): Colour {
+  static fromSpectrum(spectrum: Spectrum, resolution = 16, low = 360, high = 830): Colour {
     const samples = new Array(resolution).fill(null).map((item, index) => {
       const wavelength = mapValue(index, 0, resolution - 1, low, high);
       const intensity = spectrum.sample(wavelength);

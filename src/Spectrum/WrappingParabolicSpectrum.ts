@@ -8,9 +8,9 @@ export class WrappingParabolicSpectrum implements Spectrum {
     public center: number,
     public spread: number,
     public gain: number = 1,
-    private pull = 50,
-    low = 380,
-    high = 730,
+    private pull = 0,
+    low = 360,
+    high = 830,
   ) {
     this.middle = (low + high) / 2;
     this.range = high - low;
