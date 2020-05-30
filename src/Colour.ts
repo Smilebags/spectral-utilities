@@ -75,6 +75,20 @@ export default class Colour {
     ), this.colourSpace);
   }
 
+  normalise(): Colour {
+    const max = Math.max(this.triplet.x, this.triplet.y, this.triplet.z);
+    const triplet = new Vec3(
+      this.triplet.x / max,
+      this.triplet.y / max,
+      this.triplet.z / max,
+    );
+    return new Colour(triplet, this.colourSpace);
+  }
+
+  get sum(): number {
+    return this.triplet.x + this.triplet.y + this.triplet.z;
+  }
+
   toxyY(): Colour {
     if (this.colourSpace !== 'XYZ') {
       throw 'Not supported';

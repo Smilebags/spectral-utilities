@@ -17,7 +17,7 @@ export default class CanvasOutput {
     this.context = this.canvasEl.getContext('2d')!;
     this.imageData = new ImageData(width, height);
     this.clear();
-    setInterval(() => this.redraw(), 50);
+    // setInterval(() => this.redraw(), 50);
   }
 
   drawLine(options: {lineWidth: number, from: Vec2, to: Vec2, color: Colour }): void {
@@ -38,6 +38,30 @@ export default class CanvasOutput {
     this.context.moveTo(canvasFrom.x, canvasFrom.y);
     this.context.lineTo(canvasTo.x, canvasTo.y);
     this.context.stroke();
+
+    this.context.restore();
+  }
+  drawCircle(options: {radius: number, location: Vec2, color: Colour }): void {
+    const {
+      radius, location, color
+    } = options;
+    this.context.save();
+
+    const rgb = color.toRec709().clamp().triplet;
+    const rgbString = `rgb(${(rgb.x ** (1 / this.gamma)) * 255}, ${(rgb.y ** (1 / this.gamma)) * 255}, ${(rgb.z ** (1 / this.gamma)) * 255})`;
+    this.context.fillStyle = rgbString;
+
+    const canvasLocation = this.uvToCanvasCoordinates(location);
+    const canvasRadius = radius * this.width;
+    this.context.beginPath();
+    this.context.arc(
+      canvasLocation.x,
+      canvasLocation.y,
+      canvasRadius,
+      0,
+      2 * Math.PI,
+    );
+    this.context.fill();
 
     this.context.restore();
   }
