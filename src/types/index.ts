@@ -1,5 +1,6 @@
 import { CameraSample } from "../RandomSampler";
 import { Vec2, Vec3 } from "../Vec.js";
+import Colour from "../Colour";
 
 export interface Integrator {
   render(scene: Scene): FrameBuffer<Vec3>
@@ -60,4 +61,10 @@ export interface Ray {
   direction: Vec3;
   length: number | null;
   time: number;
+}
+
+
+
+export interface DesaturationStrategy {
+  desaturate(wavelength: number, amount: number): Colour;
 }

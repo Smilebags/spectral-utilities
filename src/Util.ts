@@ -42,3 +42,7 @@ export function clamp(value: number, low: number, high: number): number {
 export function logN(value: number, base: number): number {
   return Math.log(value) / Math.log(base);
 }
+
+export function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
