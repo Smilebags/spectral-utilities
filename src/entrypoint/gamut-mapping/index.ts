@@ -23,8 +23,10 @@ const desaturationEl = document.querySelector('#desaturation') as HTMLInputEleme
 const modeEl = document.querySelector('#mode') as HTMLButtonElement;
 const sweepEl = document.querySelector('#sweep') as HTMLButtonElement;
 
-const abneySwatchEl = document.querySelector('#abneySwatch') as HTMLDivElement;
-const gaussianSwatchEl = document.querySelector('#gaussianSwatch') as HTMLDivElement;
+const abneySwatchEl = document.querySelector('#abneySwatchLobe') as HTMLDivElement;
+const gaussianSwatchEl = document.querySelector('#gaussianSwatchLobe') as HTMLDivElement;
+const abneySwatchPinkEl = document.querySelector('#abneySwatchPink') as HTMLDivElement;
+const gaussianSwatchPinkEl = document.querySelector('#gaussianSwatchPink') as HTMLDivElement;
 
 const canvasEl = document.querySelector('canvas')!;
 const canvasOutput = new CanvasOutput(canvasEl, CANVAS_SIZE, CANVAS_SIZE, false, 2.2, 0.18);
@@ -158,20 +160,30 @@ function renderSaturation() {
       return gaussianWideningStrategy.desaturate(pinkProgress, desaturationAmount);
     });
   drawPoints(pinkDesaturationSamples);
-  fillSwatches(lobeDesaturationSamples);
+  fillSwatches(lobeDesaturationSamples, pinkDesaturationSamples);
 }
 
-function fillSwatches(samples: Colour[]) {
-  // abney
-  const clippedColour = samples[1].toRec709().normalise().clamp();
+function fillSwatches(lobeSamples: Colour[], pinkSamples: Colour[]) {
+  const clippedColour = lobeSamples[1].toRec709().normalise().clamp();
   abneySwatchEl.style.backgroundColor = clippedColour.hex;
 
-  // gaussian
-  for (let i = 1; i < samples.length; i++) {
-    const sample = samples[i];
+  for (let i = 1; i < lobeSamples.length; i++) {
+    const sample = lobeSamples[i];
     if (sample.toRec709().allPositive) {
       console.log(sample.toRec709().normalise().hex);
       gaussianSwatchEl.style.backgroundColor = sample.toRec709().normalise().hex;
+      break;
+    }
+  }
+
+  const clippedPinkColour = pinkSamples[1].toRec709().normalise().clamp();
+  abneySwatchPinkEl.style.backgroundColor = clippedPinkColour.hex;
+
+  for (let i = 1; i < pinkSamples.length; i++) {
+    const sample = pinkSamples[i];
+    if (sample.toRec709().allPositive) {
+      console.log(sample.toRec709().normalise().hex);
+      gaussianSwatchPinkEl.style.backgroundColor = sample.toRec709().normalise().hex;
       break;
     }
   }
