@@ -19,8 +19,13 @@ const CANVAS_SIZE = 1000;
 const locusEl = document.querySelector('#locusWavelength') as HTMLInputElement;
 const pinkProgressEl = document.querySelector('#pinkProgress') as HTMLInputElement;
 const desaturationEl = document.querySelector('#desaturation') as HTMLInputElement;
+
 const modeEl = document.querySelector('#mode') as HTMLButtonElement;
 const sweepEl = document.querySelector('#sweep') as HTMLButtonElement;
+
+const abneySwatchEl = document.querySelector('#abneySwatch') as HTMLDivElement;
+const gaussianSwatchEl = document.querySelector('#gaussianSwatch') as HTMLDivElement;
+
 const canvasEl = document.querySelector('canvas')!;
 const canvasOutput = new CanvasOutput(canvasEl, CANVAS_SIZE, CANVAS_SIZE, false, 2.2, 0.18);
 
@@ -153,6 +158,23 @@ function renderSaturation() {
       return gaussianWideningStrategy.desaturate(pinkProgress, desaturationAmount);
     });
   drawPoints(pinkDesaturationSamples);
+  fillSwatches(lobeDesaturationSamples);
+}
+
+function fillSwatches(samples: Colour[]) {
+  // abney
+  const clippedColour = samples[1].toRec709().normalise().clamp();
+  abneySwatchEl.style.backgroundColor = clippedColour.hex;
+
+  // gaussian
+  for (let i = 1; i < samples.length; i++) {
+    const sample = samples[i];
+    if (sample.toRec709().allPositive) {
+      console.log(sample.toRec709().normalise().hex);
+      gaussianSwatchEl.style.backgroundColor = sample.toRec709().normalise().hex;
+      break;
+    }
+  }
 }
 
 

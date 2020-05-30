@@ -4,7 +4,7 @@ import ColourConverter from "./ColourConverter.js";
 import { clamp, lerp, mapValue } from "./Util.js";
 import { Spectrum } from "./types/index.js";
 
-export type ColourSpace = 'REC.709' | 'XYZ' | 'xyY';
+export type ColourSpace = 'REC.709' | 'XYZ' | 'xyY' | 'sRGB';
 
 export default class Colour {
   constructor(
@@ -89,6 +89,10 @@ export default class Colour {
     return this.triplet.x + this.triplet.y + this.triplet.z;
   }
 
+  get allPositive(): boolean {
+    return this.triplet.x >= 0 && this.triplet.y >= 0 && this.triplet.z >= 0;
+  }
+
   toxyY(): Colour {
     if (this.colourSpace !== 'XYZ') {
       throw 'Not supported';
@@ -100,11 +104,47 @@ export default class Colour {
     if (this.colourSpace == 'REC.709') {
       return this;
     }
-    if (this.colourSpace !== 'XYZ') {
-      throw 'Not supported';
+    if (this.colourSpace === 'XYZ') {
+      const tripletInRec709 = ColourConverter.xyzToRec709(this.triplet);
+      return new Colour(tripletInRec709, 'REC.709');
     }
-    const tripletInRec709 = ColourConverter.xyzToRec709(this.triplet);
-    return new Colour(tripletInRec709, 'REC.709');
+    throw 'Not supported';
+  }
+
+  tosRGB(): Colour {
+    if (this.colourSpace == 'sRGB') {
+      return this;
+    }
+    if (this.colourSpace == 'REC.709') {
+      return new Colour(
+        new Vec3(
+          this.triplet.x ** 2.2,
+          this.triplet.y ** 2.2,
+          this.triplet.z ** 2.2,
+        ),
+        'sRGB',
+      );
+    }
+    if (this.colourSpace === 'XYZ') {
+      const tripletInRec709 = ColourConverter.xyzToRec709(this.triplet);
+      return new Colour(
+        new Vec3(
+          tripletInRec709.x ** 2.2,
+          tripletInRec709.y ** 2.2,
+          tripletInRec709.z ** 2.2,
+        ),
+        'sRGB',
+      );
+    }
+    throw 'Not supported';
+  }
+
+  get hex(): string {
+    const sRGBColur = this.tosRGB();
+    const r = Math.round(clamp(sRGBColur.triplet.x, 0, 1) * 255);
+    const g = Math.round(clamp(sRGBColur.triplet.y, 0, 1) * 255);
+    const b = Math.round(clamp(sRGBColur.triplet.z, 0, 1) * 255);
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
   }
 
   clamp(): Colour {

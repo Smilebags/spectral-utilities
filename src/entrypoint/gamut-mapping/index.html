@@ -10,6 +10,13 @@
         input {
             width: 100%;
         }
+
+        .swatches {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 200px;
+        }
     </style>
 </head>
 <body>
@@ -32,6 +39,7 @@
         value="0.5"
     >
     <input
+        style="display: none"
         type="range"
         name="desaturation"
         id="desaturation"
@@ -40,8 +48,12 @@
         step="0.001"
         value="0.5"
     >
+    Mode: <button id="mode">saturation</button>
     <button id="sweep">Sweep values</button><br />
-    Mode: <button id="mode">saturation</button><br />
     <canvas></canvas>
+    <div class="swatches">
+        <div class="swatch" id="abneySwatch"></div>
+        <div class="swatch" id="gaussianSwatch"></div>
+    </div>
 </body>
 </html>
