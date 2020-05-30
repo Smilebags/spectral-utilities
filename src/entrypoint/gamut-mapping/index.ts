@@ -17,7 +17,6 @@ const DESATURATION_SAMPLES = 60;
 const CANVAS_SIZE = 1000;
 
 const locusEl = document.querySelector('#locusWavelength') as HTMLInputElement;
-const pinkProgressEl = document.querySelector('#pinkProgress') as HTMLInputElement;
 const desaturationEl = document.querySelector('#desaturation') as HTMLInputElement;
 
 const modeEl = document.querySelector('#mode') as HTMLButtonElement;
@@ -51,13 +50,6 @@ locusEl.addEventListener('input', (e) => {
   state.locusWavelength = Number((event!.target as HTMLInputElement).value);
   render(true);
 });
-pinkProgressEl.addEventListener('input', (e) => {
-  if (!e) {
-    return;
-  }
-  state.pinkProgress = Number((event!.target as HTMLInputElement).value);
-  render(true);
-});
 desaturationEl.addEventListener('input', (e) => {
   if (!e) {
     return;
@@ -76,12 +68,10 @@ function toggleMode() {
   if (state.mode === 'saturation') {
     state.mode = 'hue';
     locusEl.style.display = 'none';
-    pinkProgressEl.style.display = 'none';
     desaturationEl.style.display = 'block';
   } else {
     state.mode = 'saturation';
     locusEl.style.display = 'block';
-    pinkProgressEl.style.display = 'block';
     desaturationEl.style.display = 'none';
   }
   modeEl.innerText = state.mode;
@@ -135,7 +125,7 @@ function render(clear = false) {
 
 function renderHue() {
   const gaussianWideningStrategy = new GaussianWideningStrategy();
-  const points = createBoundaryValues(LOCUS_SAMPLES, PINK_EDGE_SAMPLES);
+  const points = createBoundaryValues(LOCUS_SAMPLES);
   const colours = points.map(point => gaussianWideningStrategy.desaturate(point, state.desaturation));
   drawPoints(colours);
 }
@@ -152,15 +142,15 @@ function renderSaturation() {
     });
   drawPoints(lobeDesaturationSamples);
 
-  const pinkProgress = state.pinkProgress;
-  const pinkDesaturationSamples = new Array(DESATURATION_SAMPLES)
-    .fill(null)
-    .map((item, index) => {
-      const desaturationAmount = mapValue(index, 0, DESATURATION_SAMPLES - 1, 0, 1);
-      return gaussianWideningStrategy.desaturate(pinkProgress, desaturationAmount);
-    });
-  drawPoints(pinkDesaturationSamples);
-  fillSwatches(lobeDesaturationSamples, pinkDesaturationSamples);
+  // const pinkProgress = state.pinkProgress;
+  // const pinkDesaturationSamples = new Array(DESATURATION_SAMPLES)
+  //   .fill(null)
+  //   .map((item, index) => {
+  //     const desaturationAmount = mapValue(index, 0, DESATURATION_SAMPLES - 1, 0, 1);
+  //     return gaussianWideningStrategy.desaturate(pinkProgress, desaturationAmount);
+  //   });
+  // drawPoints(pinkDesaturationSamples);
+  // fillSwatches(lobeDesaturationSamples, pinkDesaturationSamples);
 }
 
 function fillSwatches(lobeSamples: Colour[], pinkSamples: Colour[]) {
@@ -176,21 +166,21 @@ function fillSwatches(lobeSamples: Colour[], pinkSamples: Colour[]) {
     }
   }
 
-  const clippedPinkColour = pinkSamples[1].toRec709().normalise().clamp();
-  abneySwatchPinkEl.style.backgroundColor = clippedPinkColour.hex;
+  // const clippedPinkColour = pinkSamples[1].toRec709().normalise().clamp();
+  // abneySwatchPinkEl.style.backgroundColor = clippedPinkColour.hex;
 
-  for (let i = 1; i < pinkSamples.length; i++) {
-    const sample = pinkSamples[i];
-    if (sample.toRec709().allPositive) {
-      console.log(sample.toRec709().normalise().hex);
-      gaussianSwatchPinkEl.style.backgroundColor = sample.toRec709().normalise().hex;
-      break;
-    }
-  }
+  // for (let i = 1; i < pinkSamples.length; i++) {
+  //   const sample = pinkSamples[i];
+  //   if (sample.toRec709().allPositive) {
+  //     console.log(sample.toRec709().normalise().hex);
+  //     gaussianSwatchPinkEl.style.backgroundColor = sample.toRec709().normalise().hex;
+  //     break;
+  //   }
+  // }
 }
 
 
-function createBoundaryValues(locusSampleCount: number, pinkEdgeSampleCount: number) {
+function createBoundaryValues(locusSampleCount: number) {
   const locusPoints = new Array(locusSampleCount)
     .fill(null)
     .map(
@@ -198,14 +188,14 @@ function createBoundaryValues(locusSampleCount: number, pinkEdgeSampleCount: num
         mapValue((index / (locusSampleCount - 1)), 0, 1, WAVELENGTH_LOW, WAVELENGTH_HIGH),
       );
   
-  const pinkEdgePoints = new Array(pinkEdgeSampleCount)
-    .fill(null)
-    .map((item, index) => mapValue(index, 0, pinkEdgeSampleCount - 1, 0, 1)
-    );
+  // const pinkEdgePoints = new Array(pinkEdgeSampleCount)
+  //   .fill(null)
+  //   .map((item, index) => mapValue(index, 0, pinkEdgeSampleCount - 1, 0, 1)
+  //   );
   
   return [
     ...locusPoints,
-    ...pinkEdgePoints,
+    // ...pinkEdgePoints,
   ];
 }
 
