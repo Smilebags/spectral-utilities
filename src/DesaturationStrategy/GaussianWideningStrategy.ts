@@ -48,6 +48,6 @@ export default class GaussianWideningStrategy implements DesaturationStrategy {
       wavelength,
       width,
     );
-    return Colour.fromSpectrum(spectrum, 2 ** 9);
+    return Colour.fromSpectrum(spectrum, 2 ** 6);
   };
 }
