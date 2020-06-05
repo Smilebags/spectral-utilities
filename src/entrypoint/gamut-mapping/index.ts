@@ -24,8 +24,6 @@ const sweepEl = document.querySelector('#sweep') as HTMLButtonElement;
 
 const abneySwatchEl = document.querySelector('#abneySwatchLobe') as HTMLDivElement;
 const gaussianSwatchEl = document.querySelector('#gaussianSwatchLobe') as HTMLDivElement;
-const abneySwatchPinkEl = document.querySelector('#abneySwatchPink') as HTMLDivElement;
-const gaussianSwatchPinkEl = document.querySelector('#gaussianSwatchPink') as HTMLDivElement;
 
 const canvasEl = document.querySelector('canvas')!;
 const canvasOutput = new CanvasOutput(canvasEl, CANVAS_SIZE, CANVAS_SIZE, false, 2.2, 0.18);
@@ -142,18 +140,18 @@ function renderSaturation() {
     });
   drawPoints(lobeDesaturationSamples);
 
-  const pinkProgress = state.pinkProgress;
-  const pinkDesaturationSamples = new Array(DESATURATION_SAMPLES)
-    .fill(null)
-    .map((item, index) => {
-      const desaturationAmount = mapValue(index, 0, DESATURATION_SAMPLES - 1, 0, 1);
-      return gaussianWideningStrategy.desaturate(pinkProgress, desaturationAmount);
-    });
-  drawPoints(pinkDesaturationSamples);
-  fillSwatches(lobeDesaturationSamples, pinkDesaturationSamples);
+  // const pinkProgress = state.pinkProgress;
+  // const pinkDesaturationSamples = new Array(DESATURATION_SAMPLES)
+  //   .fill(null)
+  //   .map((item, index) => {
+  //     const desaturationAmount = mapValue(index, 0, DESATURATION_SAMPLES - 1, 0, 1);
+  //     return gaussianWideningStrategy.desaturate(pinkProgress, desaturationAmount);
+  //   });
+  // drawPoints(pinkDesaturationSamples);
+  fillSwatches(lobeDesaturationSamples);
 }
 
-function fillSwatches(lobeSamples: Colour[], pinkSamples: Colour[]) {
+function fillSwatches(lobeSamples: Colour[]) {
   const clippedColour = lobeSamples[1].toRec709().normalise().clamp();
   abneySwatchEl.style.backgroundColor = clippedColour.hex;
 
