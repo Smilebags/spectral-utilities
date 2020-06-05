@@ -142,15 +142,15 @@ function renderSaturation() {
     });
   drawPoints(lobeDesaturationSamples);
 
-  // const pinkProgress = state.pinkProgress;
-  // const pinkDesaturationSamples = new Array(DESATURATION_SAMPLES)
-  //   .fill(null)
-  //   .map((item, index) => {
-  //     const desaturationAmount = mapValue(index, 0, DESATURATION_SAMPLES - 1, 0, 1);
-  //     return gaussianWideningStrategy.desaturate(pinkProgress, desaturationAmount);
-  //   });
-  // drawPoints(pinkDesaturationSamples);
-  // fillSwatches(lobeDesaturationSamples, pinkDesaturationSamples);
+  const pinkProgress = state.pinkProgress;
+  const pinkDesaturationSamples = new Array(DESATURATION_SAMPLES)
+    .fill(null)
+    .map((item, index) => {
+      const desaturationAmount = mapValue(index, 0, DESATURATION_SAMPLES - 1, 0, 1);
+      return gaussianWideningStrategy.desaturate(pinkProgress, desaturationAmount);
+    });
+  drawPoints(pinkDesaturationSamples);
+  fillSwatches(lobeDesaturationSamples, pinkDesaturationSamples);
 }
 
 function fillSwatches(lobeSamples: Colour[], pinkSamples: Colour[]) {
