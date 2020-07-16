@@ -7,6 +7,7 @@ import { Spectrum } from "./types/index.js";
 export type ColourSpace = 'REC.709' | 'XYZ' | 'xyY' | 'sRGB';
 
 export default class Colour {
+
   constructor(
     public triplet: Vec3,
     public colourSpace: ColourSpace = 'REC.709',
@@ -57,6 +58,20 @@ export default class Colour {
       this.triplet.y * colour.triplet.y,
       this.triplet.z * colour.triplet.z,
     ), this.colourSpace);
+  }
+
+  divide(colour: Colour | number): Colour {
+    if (typeof colour === 'number') {
+      return this.multiply(1 / colour);
+    }
+    return this.multiply(new Colour(
+      new Vec3(
+        1 / colour.triplet.x,
+        1 / colour.triplet.y,
+        1 / colour.triplet.z,
+      ),
+      colour.colourSpace,
+    ));
   }
 
   add(colour: Colour): Colour {

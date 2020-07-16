@@ -37,7 +37,11 @@ export default class ColourConverter {
     const red = (3.2404542 * xyz.x) + (-1.5371385 * xyz.y) + (-0.4985314 * xyz.z);
     const green = (-0.969266 * xyz.x) + (1.87601080 * xyz.y) + (0.04155600 * xyz.z);
     const blue = (0.0556434 * xyz.x) + (-0.2040259 * xyz.y) + (1.05722520 * xyz.z);
-    return new Vec3(red, green, blue);
+
+    const adaptedRed = (0.882747 * red) + (0.114509 * green) + (0.00274331 * blue);
+    const adaptedGreen = (-0.00759616 * red) + (1.00778 * green) + (-0.000187851 * blue);
+    const adaptedBlue = (-0.00283521 * red) + (-0.00917944 * green) + (1.01201 * blue);
+    return new Vec3(adaptedRed, adaptedGreen, adaptedBlue);
   }
 
   static xyzToxyY(xyz: Vec3): Vec3 {

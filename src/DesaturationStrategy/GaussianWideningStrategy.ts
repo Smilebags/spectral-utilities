@@ -17,6 +17,9 @@ export default class GaussianWideningStrategy implements DesaturationStrategy {
     if (desaturation <= 0) {
       return 0;
     }
+    if (desaturation >= 1) {
+      return 10 ** 10;
+    }
     // return (1 / ((desaturation - 1) ** 2)) - 1;
     return mapValue(desaturation, 0, 1, 0.1, 200);
   }
@@ -39,7 +42,7 @@ export default class GaussianWideningStrategy implements DesaturationStrategy {
       primary,
       above,
       below,
-    ]).multiply(5);
+    ]).multiply(8.5);
   }
 
   private locusLobeWideningStrategy(wavelength: number, amount: number): Colour {

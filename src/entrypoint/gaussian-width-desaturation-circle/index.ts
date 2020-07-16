@@ -89,10 +89,10 @@ async function sweep() {
 }
 
 async function sweepHue() {
-  const hueSamples = 600;
+  const hueSamples = 300;
   for (let i = 0; i < hueSamples; i++) {
     await sleep(1);
-    state.desaturation = i / (hueSamples - 1);
+    state.desaturation = (i / (hueSamples - 1)) ** 1.2;
     render();
   }
 }
@@ -128,11 +128,12 @@ function renderHue() {
   const samplePoints = points.map((point, index, arr) => {
     const colour = gaussianWideningStrategy.desaturate(point, state.desaturation);
     const progress = mapValue(index, 0, arr.length - 1, 0, Math.PI * 2);
-    const radius = mapValue(state.desaturation, 0, 1, 1, 0) ** 2;
+    const radius = mapValue(state.desaturation, 0, 1, 1, 0);
     const location = new Vec2(
       Math.sin(progress) * radius,
       Math.cos(progress) * radius,
     );
+    
     return { colour, location };
   });
   drawPoints(samplePoints);
