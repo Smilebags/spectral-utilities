@@ -39,7 +39,7 @@ export default class GaussianWideningStrategy implements DesaturationStrategy {
       primary,
       above,
       below,
-    ]);
+    ]).multiply(5);
   }
 
   private locusLobeWideningStrategy(wavelength: number, amount: number): Colour {
