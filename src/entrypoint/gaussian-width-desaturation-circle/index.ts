@@ -5,16 +5,20 @@ import { Vec2, Vec3 } from "../../Vec.js";
 import GaussianWideningStrategy from "../../DesaturationStrategy/GaussianWideningStrategy.js";
 
 
+const CLIP_OUT_OF_GAMUT = false;
+
 const WAVELENGTH_LOW = 360;
 const WAVELENGTH_HIGH = 830;
 
 const LOW_COLOR = Colour.fromWavelength(WAVELENGTH_LOW).normalise();
 const HIGH_COLOR = Colour.fromWavelength(WAVELENGTH_HIGH).normalise();
 
-const LOCUS_SAMPLES = 300;
+const LOCUS_SAMPLES = 200;
 const PINK_EDGE_SAMPLES = 40;
 const DESATURATION_SAMPLES = 60;
-const CANVAS_SIZE = 1000;
+const HUE_SAMPLES = 250;
+
+const CANVAS_SIZE = 1500;
 
 const locusEl = document.querySelector('#locusWavelength') as HTMLInputElement;
 const desaturationEl = document.querySelector('#desaturation') as HTMLInputElement;
@@ -26,12 +30,12 @@ const abneySwatchEl = document.querySelector('#abneySwatchLobe') as HTMLDivEleme
 const gaussianSwatchEl = document.querySelector('#gaussianSwatchLobe') as HTMLDivElement;
 
 const canvasEl = document.querySelector('canvas')!;
-const canvasOutput = new CanvasOutput(canvasEl, CANVAS_SIZE, CANVAS_SIZE, false, 2.2, 0.18);
+const canvasOutput = new CanvasOutput(canvasEl, CANVAS_SIZE, CANVAS_SIZE, true, 2.2, 0.18);
 
 
 const state = {
-  mode: 'saturation',
-  desaturation: 0.85,
+  mode: 'hue',
+  desaturation: 1,
   locusWavelength: 550,
   pinkProgress: 0.5,
   sweep: false,
@@ -89,10 +93,9 @@ async function sweep() {
 }
 
 async function sweepHue() {
-  const hueSamples = 300;
-  for (let i = 0; i < hueSamples; i++) {
+  for (let i = 0; i < HUE_SAMPLES; i++) {
     await sleep(1);
-    state.desaturation = (i / (hueSamples - 1)) ** 1.2;
+    state.desaturation = (i / (HUE_SAMPLES - 1)) ** 1.2;
     render();
   }
 }
@@ -126,7 +129,7 @@ function renderHue() {
   const gaussianWideningStrategy = new GaussianWideningStrategy();
   const points = createBoundaryValues();
   const samplePoints = points.map((point, index, arr) => {
-    const colour = gaussianWideningStrategy.desaturate(point, state.desaturation);
+    const colour = gaussianWideningStrategy.desaturate(point, state.desaturation).multiply(14);
     const progress = mapValue(index, 0, arr.length - 1, 0, Math.PI * 2);
     const radius = mapValue(state.desaturation, 0, 1, 1, 0);
     const location = new Vec2(
@@ -253,6 +256,9 @@ function drawPoints(points: { colour: Colour, location: Vec2 }[]): void {
       if (index === 0) {
         return;
       }
+      if (isColourOutOfRec709Gamut(colour) && CLIP_OUT_OF_GAMUT) {
+        return;
+      }
       canvasOutput.drawLine({
         lineWidth: 0.003,
         from: arr[index - 1].location,
@@ -260,4 +266,17 @@ function drawPoints(points: { colour: Colour, location: Vec2 }[]): void {
         color: colour,
       });
   });
+}
+
+
+function isColourOutOfRec709Gamut(colour: Colour): boolean {
+  const rec709Colour = colour.toRec709();
+  return (
+    rec709Colour.triplet.x >= 1 ||
+    rec709Colour.triplet.y >= 1 ||
+    rec709Colour.triplet.z >= 1 ||
+    rec709Colour.triplet.x <= 0 ||
+    rec709Colour.triplet.y <= 0 ||
+    rec709Colour.triplet.z <= 0
+  );
 }

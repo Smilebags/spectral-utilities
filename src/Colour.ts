@@ -151,7 +151,17 @@ export default class Colour {
         'sRGB',
       );
     }
-    throw 'Not supported';
+    throw 'Unsupported conversion';
+  }
+
+  toXYZ(): Colour {
+    if (this.colourSpace === 'xyY') {
+      const { x, y, z: Y } = this.triplet;
+      const X = (x * Y) / y;
+      const Z = ((1-x-y) * Y)/y;
+      return new Colour(new Vec3(X, Y, Z), 'XYZ');
+    }
+    throw 'Unsupported conversion';
   }
 
   get hex(): string {

@@ -1,9 +1,6 @@
 import { DesaturationStrategy } from "../types/index.js";
 import { GaussianSpectrum } from "../Spectrum/GaussianSpectrum.js";
 import Colour from "../Colour.js";
-import { mapValue } from "../Util.js";
-
-
 
 
 export default class GaussianWideningStrategy implements DesaturationStrategy {
@@ -17,32 +14,23 @@ export default class GaussianWideningStrategy implements DesaturationStrategy {
     if (desaturation <= 0) {
       return 0;
     }
-    if (desaturation >= 1) {
-      return 10 ** 10;
-    }
-    // return (1 / ((desaturation - 1) ** 2)) - 1;
-    return mapValue(desaturation, 0, 1, 0.1, 200);
+    return 50 * Math.log(1/(1-desaturation));
   }
 
   public desaturate(wavelength: number, amount: number): Colour {
     const primary = this.locusLobeWideningStrategy(wavelength, amount);
     const above = this.locusLobeWideningStrategy(wavelength + this.wavelengthRange, amount);
     const below = this.locusLobeWideningStrategy(wavelength - this.wavelengthRange, amount);
-    
-    // const totalAboveEnergy = primary.sum + above.sum + below.sum;
-    // const totalBelowEnergy = primary.sum + above.sum + below.sum;
+    const twoAbove = this.locusLobeWideningStrategy(wavelength + (this.wavelengthRange * 2), amount);
+    const twoBelow = this.locusLobeWideningStrategy(wavelength - (this.wavelengthRange * 2), amount);
 
-    // const aboveFactor = above.sum / totalAboveEnergy;
-    // const belowFactor = below.sum / totalBelowEnergy;
-
-    // const scaledPrimary = primary;
-    // const scaledAbove = above.multiply(aboveFactor);
-    // const scaledBelow = below.multiply(belowFactor);
     return Colour.fromAverage([
       primary,
       above,
       below,
-    ]).multiply(8.5);
+      twoAbove,
+      twoBelow,
+    ]);
   }
 
   private locusLobeWideningStrategy(wavelength: number, amount: number): Colour {
