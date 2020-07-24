@@ -66,5 +66,5 @@ export interface Ray {
 
 
 export interface DesaturationStrategy {
-  desaturate(wavelength: number, amount: number): Colour;
+  desaturate(wavelength: number, amount: number, integrationSampleCount: number): Colour;
 }

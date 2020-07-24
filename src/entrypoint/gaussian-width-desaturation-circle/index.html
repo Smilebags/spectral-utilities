@@ -20,34 +20,7 @@
     </style>
 </head>
 <body>
-    <input
-        type="range"
-        name="locusWavelength"
-        id="locusWavelength"
-        min="360"
-        max="830"
-        step="0.01"
-        value="550"
-    >
-    <input
-        style="display: none"
-        type="range"
-        name="desaturation"
-        id="desaturation"
-        min="0"
-        max="1"
-        step="0.001"
-        value="1"
-    >
-    <br />
-    Mode: <button id="mode">hue</button>
-    <button id="sweep">Sweep values</button><br />
+    <button id="refine">Refine</button><br />
     <canvas></canvas>
-    <p>Best sRGB representation of spectral colour</p>
-    <p>Channel clipping on the left, gaussian widening desaturation on the right</p>
-    <div class="swatches">
-        <div class="swatch" id="abneySwatchLobe"></div>
-        <div class="swatch" id="gaussianSwatchLobe"></div>
-    </div>
 </body>
 </html>

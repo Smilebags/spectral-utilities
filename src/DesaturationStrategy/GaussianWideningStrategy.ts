@@ -17,12 +17,12 @@ export default class GaussianWideningStrategy implements DesaturationStrategy {
     return 50 * Math.log(1/(1-desaturation));
   }
 
-  public desaturate(wavelength: number, amount: number): Colour {
-    const primary = this.locusLobeWideningStrategy(wavelength, amount);
-    const above = this.locusLobeWideningStrategy(wavelength + this.wavelengthRange, amount);
-    const below = this.locusLobeWideningStrategy(wavelength - this.wavelengthRange, amount);
-    const twoAbove = this.locusLobeWideningStrategy(wavelength + (this.wavelengthRange * 2), amount);
-    const twoBelow = this.locusLobeWideningStrategy(wavelength - (this.wavelengthRange * 2), amount);
+  public desaturate(wavelength: number, amount: number, integrationSampleCount: number): Colour {
+    const primary = this.locusLobeWideningStrategy(wavelength, amount, integrationSampleCount);
+    const above = this.locusLobeWideningStrategy(wavelength + this.wavelengthRange, amount, integrationSampleCount);
+    const below = this.locusLobeWideningStrategy(wavelength - this.wavelengthRange, amount, integrationSampleCount);
+    const twoAbove = this.locusLobeWideningStrategy(wavelength + (this.wavelengthRange * 2), amount, integrationSampleCount);
+    const twoBelow = this.locusLobeWideningStrategy(wavelength - (this.wavelengthRange * 2), amount, integrationSampleCount);
 
     return Colour.fromAverage([
       primary,
@@ -33,12 +33,12 @@ export default class GaussianWideningStrategy implements DesaturationStrategy {
     ]);
   }
 
-  private locusLobeWideningStrategy(wavelength: number, amount: number): Colour {
+  private locusLobeWideningStrategy(wavelength: number, amount: number, integrationSampleCount: number): Colour {
     const width = this.getWidthFromDesaturation(amount);
     const spectrum = new GaussianSpectrum(
       wavelength,
       width,
     );
-    return Colour.fromSpectrum(spectrum, 2 ** 6);
+    return Colour.fromSpectrum(spectrum, integrationSampleCount);
   };
 }
