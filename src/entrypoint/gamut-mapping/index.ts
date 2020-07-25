@@ -5,7 +5,7 @@ import { Vec2, Vec3 } from "../../Vec.js";
 import GaussianWideningStrategy from "../../DesaturationStrategy/GaussianWideningStrategy.js";
 
 
-const WAVELENGTH_LOW = 360;
+const WAVELENGTH_LOW = 390;
 const WAVELENGTH_HIGH = 830;
 
 const LOW_COLOR = Colour.fromWavelength(WAVELENGTH_LOW).normalise();
@@ -122,21 +122,21 @@ function render(clear = false) {
 }
 
 function renderHue() {
-  const gaussianWideningStrategy = new GaussianWideningStrategy();
+  const gaussianWideningStrategy = new GaussianWideningStrategy(WAVELENGTH_LOW, WAVELENGTH_HIGH);
   const points = createBoundaryValues(LOCUS_SAMPLES);
-  const colours = points.map(point => gaussianWideningStrategy.desaturate(point, state.desaturation));
+  const colours = points.map(point => gaussianWideningStrategy.desaturate(point, state.desaturation, 2 ** 7));
   drawPoints(colours);
 }
 
 function renderSaturation() {
-  const gaussianWideningStrategy = new GaussianWideningStrategy();
+  const gaussianWideningStrategy = new GaussianWideningStrategy(WAVELENGTH_LOW, WAVELENGTH_HIGH);
 
   const locusWavelength = state.locusWavelength;
   const lobeDesaturationSamples = new Array(DESATURATION_SAMPLES)
     .fill(null)
     .map((item, index) => {
       const desaturationAmount = mapValue(index, 0, DESATURATION_SAMPLES - 1, 0, 1);
-      return gaussianWideningStrategy.desaturate(locusWavelength, desaturationAmount);
+      return gaussianWideningStrategy.desaturate(locusWavelength, desaturationAmount, 2 ** 7);
     });
   drawPoints(lobeDesaturationSamples);
 

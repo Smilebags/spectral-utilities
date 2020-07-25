@@ -6,8 +6,8 @@ import Colour from "../Colour.js";
 export default class GaussianWideningStrategy implements DesaturationStrategy {
   private wavelengthRange = this.wavelengthHigh - this.wavelengthLow;
   constructor(
-    private wavelengthLow = 360,
-    private wavelengthHigh = 830,
+    private wavelengthLow: number,
+    private wavelengthHigh: number,
   ) {}
 
   private getWidthFromDesaturation(desaturation: number): number {
@@ -17,8 +17,11 @@ export default class GaussianWideningStrategy implements DesaturationStrategy {
     return 50 * Math.log(1/(1-desaturation));
   }
 
-  public desaturate(wavelength: number, amount: number, integrationSampleCount: number): Colour {
+  public desaturate(wavelength: number, amount: number, integrationSampleCount: number, wrap = true): Colour {
     const primary = this.locusLobeWideningStrategy(wavelength, amount, integrationSampleCount);
+    if (!wrap) {
+      return primary;
+    }
     const above = this.locusLobeWideningStrategy(wavelength + this.wavelengthRange, amount, integrationSampleCount);
     const below = this.locusLobeWideningStrategy(wavelength - this.wavelengthRange, amount, integrationSampleCount);
     const twoAbove = this.locusLobeWideningStrategy(wavelength + (this.wavelengthRange * 2), amount, integrationSampleCount);
@@ -30,7 +33,7 @@ export default class GaussianWideningStrategy implements DesaturationStrategy {
       below,
       twoAbove,
       twoBelow,
-    ]);
+    ]).multiply(5);
   }
 
   private locusLobeWideningStrategy(wavelength: number, amount: number, integrationSampleCount: number): Colour {

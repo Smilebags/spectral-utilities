@@ -6,8 +6,8 @@ import GaussianWideningStrategy from "../../DesaturationStrategy/GaussianWidenin
 import { adjustedCumulative, findFirstIndex } from './xy-distance.js';
 
 const CLIP_OUT_OF_GAMUT = false;
-const WAVELENGTH_LOW = 420;
-const WAVELENGTH_HIGH = 670;
+const WAVELENGTH_LOW = 390;
+const WAVELENGTH_HIGH = 830;
 const CANVAS_SIZE = 1500;
 
 
@@ -37,20 +37,24 @@ async function render(highQuality = false) {
 }
 
 function drawRing(highQuality: boolean) {
-  const HUE_SAMPLES = highQuality ? 720 : 120;
+  const MAGENTA_LENGTH = 0.00;
+  const LOCUS_SAMPLE_COUNT = highQuality ? 720 : 120;
   const SPECTRUM_SAMPLE_SHIFT = highQuality ? 2 : 0;
+  const MAGENTA_SAMPLE_COUNT = Math.floor(LOCUS_SAMPLE_COUNT * 0.3);
+  const LOCUS_LENGTH = 1 - MAGENTA_LENGTH;
 
   const gaussianWideningStrategy = new GaussianWideningStrategy(WAVELENGTH_LOW, WAVELENGTH_HIGH);
-  const points = createBoundaryValues(HUE_SAMPLES);
-  const samplePoints = points.map((point, index, arr) => {
+  const locusPoints = createBoundaryValues(LOCUS_SAMPLE_COUNT);
+  const locusSamplePoints = locusPoints.map((point, index, arr) => {
     const spectrumSamplePower = mapValue(state.desaturation ** 2, 0, 1, 6, 4) + SPECTRUM_SAMPLE_SHIFT;
     const spectrumSampleCount = Math.round(2 ** spectrumSamplePower);
     const colour = gaussianWideningStrategy.desaturate(
       point,
       state.desaturation,
       spectrumSampleCount,
-    ).multiply(2);
-    const progress = mapValue(index, 0, arr.length - 1, 0, Math.PI * 2);
+      false,
+    ).multiply(3);
+    const progress = mapValue(index, 0, arr.length - 1, 0, Math.PI * 2 * LOCUS_LENGTH);
     const radius = mapValue(state.desaturation, 0, 1, 1, 0);
     const location = new Vec2(
       Math.sin(progress) * radius,
@@ -59,28 +63,72 @@ function drawRing(highQuality: boolean) {
     
     return { colour, location };
   });
-  drawPoints(samplePoints);
+
+  const magentaPoints = createMagentaValues(MAGENTA_SAMPLE_COUNT);
+  const magentaSamplePoints = magentaPoints.map((progress) => {
+    const spectrumSamplePower = mapValue(state.desaturation ** 2, 0, 1, 6, 4) + SPECTRUM_SAMPLE_SHIFT;
+    const spectrumSampleCount = Math.round(2 ** spectrumSamplePower);
+    const redColour = gaussianWideningStrategy.desaturate(
+      WAVELENGTH_HIGH,
+      state.desaturation,
+      spectrumSampleCount,
+      false,
+    ).multiply(3);
+    const blueColour = gaussianWideningStrategy.desaturate(
+      WAVELENGTH_LOW,
+      state.desaturation,
+      spectrumSampleCount,
+      false,
+    ).multiply(4);
+    const radius = mapValue(state.desaturation, 0, 1, 1, 0);
+    const radialProgress = mapValue(progress, 0, 1, Math.PI * 2 * LOCUS_LENGTH, Math.PI * 2);
+    const location = new Vec2(
+      Math.sin(radialProgress) * radius,
+      Math.cos(radialProgress) * radius,
+    );
+    const scaledRed = redColour.triplet.multiply(1 - progress);
+    const scaledBlue = blueColour.triplet.multiply(progress);
+    const newColourCoordinate = scaledRed.add(scaledBlue);
+    const colour = new Colour(newColourCoordinate, 'XYZ');
+    
+    return { colour, location };
+  });
+  drawPoints([
+    ...locusSamplePoints,
+    // ...magentaSamplePoints,
+  ]);
 }
 
-// function createBoundaryValues(sampleCount: number) {
-//   return new Array(sampleCount)
-//     .fill(null)
-//     .map(
-//       (item, index) => {
-//         const progress = index / (sampleCount - 1);
-//         const firstIndex = findFirstIndex(adjustedCumulative, (item: any) => item[0] >= progress);
-//         const wavelength = adjustedCumulative[firstIndex][1];
-//         return wavelength;
-//       });
-// }
-
-function createBoundaryValues(locusSampleCount: number) {
-  return new Array(locusSampleCount)
+function createBoundaryValues(sampleCount: number) {
+  return new Array(sampleCount)
     .fill(null)
     .map(
-      (item, index) => 
-        mapValue((index / (locusSampleCount - 1)), 0, 1, WAVELENGTH_LOW, WAVELENGTH_HIGH),
-      );
+      (item, index) => {
+        const progress = index / (sampleCount - 1);
+        const firstIndex = findFirstIndex(adjustedCumulative, (item: any) => item[0] >= progress);
+        const wavelength = adjustedCumulative[firstIndex][1];
+        return wavelength;
+      });
+}
+
+// function createBoundaryValues(locusSampleCount: number) {
+//   return new Array(locusSampleCount)
+//     .fill(null)
+//     .map(
+//       (item, index) => 
+//         mapValue((index / (locusSampleCount - 1)), 0, 1, WAVELENGTH_LOW, WAVELENGTH_HIGH),
+//       );
+// }
+
+
+function createMagentaValues(sampleCount: number) {
+  return new Array(sampleCount)
+    .fill(null)
+    .map(
+      (item, index) => {
+        return index / (sampleCount - 1);
+      });
+  
 }
 
 function drawPoints(points: { colour: Colour, location: Vec2 }[]): void {
@@ -103,7 +151,7 @@ function drawPoints(points: { colour: Colour, location: Vec2 }[]): void {
         lineWidth: 0.003,
         from: arr[index - 1].location,
         to: location,
-        color: colour.normalise(),
+        color: colour,
       });
   });
 }

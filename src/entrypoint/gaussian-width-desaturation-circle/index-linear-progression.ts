@@ -3,11 +3,10 @@ import { mapValue, sleep } from "../../Util.js";
 import CanvasOutput from "../../CanvasOutput.js";
 import { Vec2 } from "../../Vec.js";
 import GaussianWideningStrategy from "../../DesaturationStrategy/GaussianWideningStrategy.js";
-import { adjustedCumulative, findFirstIndex } from './xy-distance.js';
 
 const CLIP_OUT_OF_GAMUT = false;
-const WAVELENGTH_LOW = 420;
-const WAVELENGTH_HIGH = 670;
+const WAVELENGTH_LOW = 360;
+const WAVELENGTH_HIGH = 830;
 const CANVAS_SIZE = 1500;
 
 
@@ -49,7 +48,7 @@ function drawRing(highQuality: boolean) {
       point,
       state.desaturation,
       spectrumSampleCount,
-    ).multiply(2);
+    ).multiply(14);
     const progress = mapValue(index, 0, arr.length - 1, 0, Math.PI * 2);
     const radius = mapValue(state.desaturation, 0, 1, 1, 0);
     const location = new Vec2(
@@ -61,18 +60,6 @@ function drawRing(highQuality: boolean) {
   });
   drawPoints(samplePoints);
 }
-
-// function createBoundaryValues(sampleCount: number) {
-//   return new Array(sampleCount)
-//     .fill(null)
-//     .map(
-//       (item, index) => {
-//         const progress = index / (sampleCount - 1);
-//         const firstIndex = findFirstIndex(adjustedCumulative, (item: any) => item[0] >= progress);
-//         const wavelength = adjustedCumulative[firstIndex][1];
-//         return wavelength;
-//       });
-// }
 
 function createBoundaryValues(locusSampleCount: number) {
   return new Array(locusSampleCount)
@@ -103,7 +90,7 @@ function drawPoints(points: { colour: Colour, location: Vec2 }[]): void {
         lineWidth: 0.003,
         from: arr[index - 1].location,
         to: location,
-        color: colour.normalise(),
+        color: colour,
       });
   });
 }

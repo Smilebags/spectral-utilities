@@ -35,7 +35,7 @@ export class SpectralColourPicker {
   ];
   constructor(
     private canvas: CanvasOutput,
-    private spectrumSamplingLowWavelength = 360,
+    private spectrumSamplingLowWavelength = 390,
     private spectrumSamplingHighWavelength = 830,
     private spectrumSamplingResolution = 64,
   ) {

@@ -13,7 +13,7 @@ export default class Colour {
     public colourSpace: ColourSpace = 'REC.709',
   ) {}
 
-  static fromSpectrum(spectrum: Spectrum, resolution = 16, low = 360, high = 830): Colour {
+  static fromSpectrum(spectrum: Spectrum, resolution = 2 ** 7, low = 400, high = 780): Colour {
     const samples = new Array(resolution).fill(null).map((item, index) => {
       const wavelength = mapValue(index, 0, resolution - 1, low, high);
       const intensity = spectrum.sample(wavelength);
@@ -38,6 +38,9 @@ export default class Colour {
     const totalZ = colours
       .map(colour => colour.triplet.z)
       .reduce((total, current) => total + current, 0);
+    if (!totalX && !totalY && !totalZ) {
+      return new Colour(new Vec3(0,0,0), colours[0].colourSpace);
+    }
     return new Colour(new Vec3(
       totalX / colours.length,
       totalY / colours.length,
