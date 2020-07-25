@@ -4,6 +4,7 @@ export class Vec2 {
     public y: number,
   ) {}
 
+
   add(other: Vec2 | number): Vec2 {
     if(typeof other === "number") {
       return new Vec2(
@@ -59,6 +60,10 @@ export class Vec3 {
     public y: number,
     public z: number,
   ) {}
+  
+  static fromArray(numbers: [number, number, number]): Vec3 {
+    return new Vec3(...numbers);
+  }
 
   add(other: Vec3): Vec3 {
     return new Vec3(
@@ -100,6 +105,7 @@ export class Vec3 {
   get magnitude(): number {
       return Math.sqrt((this.x ** 2) + (this.y ** 2) + (this.z ** 2));
   }
+
   dot(v: Vec3): number {
       return this.x * v.x + this.y * v.y + this.z * v.z;
   }
@@ -110,5 +116,13 @@ export class Vec3 {
           (this.z * v.x) - (this.x * v.z),
           (this.x * v.y) - (this.y * v.x),
       );
+  }
+
+  toArray(): [number, number, number] {
+    return [
+      this.x,
+      this.y,
+      this.z,
+    ];
   }
 }

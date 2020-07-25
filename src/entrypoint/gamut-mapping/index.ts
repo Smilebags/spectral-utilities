@@ -152,14 +152,14 @@ function renderSaturation() {
 }
 
 function fillSwatches(lobeSamples: Colour[]) {
-  const clippedColour = lobeSamples[1].toRec709().normalise().clamp();
+  const clippedColour = lobeSamples[1].to('REC.709').normalise().clamp();
   abneySwatchEl.style.backgroundColor = clippedColour.hex;
 
   for (let i = 1; i < lobeSamples.length; i++) {
     const sample = lobeSamples[i];
-    if (sample.toRec709().allPositive) {
-      console.log(sample.toRec709().normalise().hex);
-      gaussianSwatchEl.style.backgroundColor = sample.toRec709().normalise().hex;
+    if (sample.to('REC.709').allPositive) {
+      console.log(sample.to('REC.709').normalise().hex);
+      gaussianSwatchEl.style.backgroundColor = sample.to('REC.709').normalise().hex;
       break;
     }
   }
@@ -220,7 +220,7 @@ function createBoundarySamples(locusSampleCount: number, pinkEdgeSampleCount: nu
 }
 
 function drawDot(point: Colour): void {
-  const xyYlocation = point.toxyY();
+  const xyYlocation = point.to('xyY');
   const location = new Vec2(xyYlocation.triplet.x, xyYlocation.triplet.y).add(0.1);
   canvasOutput.drawCircle({
     radius: 0.05,
@@ -232,7 +232,7 @@ function drawDot(point: Colour): void {
 function drawPoints(points: Colour[]): void {
   points
     .map(point => {
-      const xyYlocation = point.toxyY();
+      const xyYlocation = point.to('xyY');
       const mappedLocation = new Vec2(xyYlocation.triplet.x, xyYlocation.triplet.y).add(0.1);
         return {
           location: mappedLocation,

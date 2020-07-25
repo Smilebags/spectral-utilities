@@ -28,7 +28,7 @@ export default class CanvasOutput {
 
     this.context.lineWidth = lineWidth * this.width;
     this.context.lineCap = 'round';
-    const rgb = color.toRec709().clamp().triplet;
+    const rgb = color.to('REC.709').clamp().triplet;
     const rgbString = `rgb(${(rgb.x ** (1 / this.gamma)) * 255}, ${(rgb.y ** (1 / this.gamma)) * 255}, ${(rgb.z ** (1 / this.gamma)) * 255})`;
     this.context.strokeStyle = rgbString;
 
@@ -48,7 +48,7 @@ export default class CanvasOutput {
     } = options;
     this.context.save();
 
-    const rgb = color.toRec709().clamp().triplet;
+    const rgb = color.to('REC.709').clamp().triplet;
     const rgbString = `rgb(${(rgb.x ** (1 / this.gamma)) * 255}, ${(rgb.y ** (1 / this.gamma)) * 255}, ${(rgb.z ** (1 / this.gamma)) * 255})`;
     this.context.fillStyle = rgbString;
 

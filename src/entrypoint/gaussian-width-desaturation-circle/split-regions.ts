@@ -4,6 +4,7 @@ import CanvasOutput from "../../CanvasOutput.js";
 import { Vec2 } from "../../Vec.js";
 import GaussianWideningStrategy from "../../DesaturationStrategy/GaussianWideningStrategy.js";
 import { adjustedCumulative, findFirstIndex } from './xy-distance.js';
+import colourSpaceProviderSingleton from "../../ColourSpaceProviderSingleton.js";
 
 const CLIP_OUT_OF_GAMUT = false;
 const WAVELENGTH_LOW = 390;
@@ -89,7 +90,7 @@ function drawRing(highQuality: boolean) {
     const scaledRed = redColour.triplet.multiply(1 - progress);
     const scaledBlue = blueColour.triplet.multiply(progress);
     const newColourCoordinate = scaledRed.add(scaledBlue);
-    const colour = new Colour(newColourCoordinate, 'XYZ');
+    const colour = new Colour(newColourCoordinate, 'XYZ', colourSpaceProviderSingleton);
     
     return { colour, location };
   });
@@ -157,7 +158,7 @@ function drawPoints(points: { colour: Colour, location: Vec2 }[]): void {
 }
 
 function isColourOutOfRec709Gamut(colour: Colour): boolean {
-  const rec709Colour = colour.toRec709();
+  const rec709Colour = colour.to('REC.709');
   return (
     rec709Colour.triplet.x >= 1 ||
     rec709Colour.triplet.y >= 1 ||
