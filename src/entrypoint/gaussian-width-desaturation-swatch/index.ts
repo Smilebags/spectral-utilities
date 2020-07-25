@@ -4,7 +4,7 @@ import GaussianWideningStrategy from "../../DesaturationStrategy/GaussianWidenin
 import { mapValue } from "../../Util.js";
 
 const canvasEl = document.querySelector('canvas')!;
-const canvasOutput = new CanvasOutput(canvasEl, 200, 10, false, 2.2, 0.18);
+const canvasOutput = new CanvasOutput(canvasEl, 200, 10);
 
 const gaussianWideningStrategy = new GaussianWideningStrategy(390, 830);
 const exposure = 2;

@@ -13,7 +13,7 @@ const CANVAS_SIZE = 1500;
 const refineEl = document.querySelector('#refine') as HTMLButtonElement;
 const canvasEl = document.querySelector('canvas')!;
 
-const canvasOutput = new CanvasOutput(canvasEl, CANVAS_SIZE, CANVAS_SIZE, true, 2.2, 0.18);
+const canvasOutput = new CanvasOutput(canvasEl, CANVAS_SIZE, CANVAS_SIZE, true);
 
 const state = {
   desaturation: 1,

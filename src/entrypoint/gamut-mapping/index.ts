@@ -26,7 +26,7 @@ const abneySwatchEl = document.querySelector('#abneySwatchLobe') as HTMLDivEleme
 const gaussianSwatchEl = document.querySelector('#gaussianSwatchLobe') as HTMLDivElement;
 
 const canvasEl = document.querySelector('canvas')!;
-const canvasOutput = new CanvasOutput(canvasEl, CANVAS_SIZE, CANVAS_SIZE, false, 2.2, 0.18);
+const canvasOutput = new CanvasOutput(canvasEl, CANVAS_SIZE, CANVAS_SIZE);
 
 
 const state = {
