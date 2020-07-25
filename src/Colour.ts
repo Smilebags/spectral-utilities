@@ -152,11 +152,15 @@ export default class Colour {
   }
 
   get hex(): string {
-    const sRGBColur = this.to('sRGB');
-    const r = Math.round(clamp(sRGBColur.triplet.x, 0, 1) * 255);
-    const g = Math.round(clamp(sRGBColur.triplet.y, 0, 1) * 255);
-    const b = Math.round(clamp(sRGBColur.triplet.z, 0, 1) * 255);
+    const r = Math.round(clamp(this.triplet.x, 0, 1) * 255);
+    const g = Math.round(clamp(this.triplet.y, 0, 1) * 255);
+    const b = Math.round(clamp(this.triplet.z, 0, 1) * 255);
     return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  }
+
+  get sRGBHex(): string {
+    const sRGBColour = this.to('sRGB');
+    return sRGBColour.hex;
   }
 
   clamp(): Colour {
