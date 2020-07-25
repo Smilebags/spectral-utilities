@@ -1,6 +1,6 @@
 import { CameraSample } from "../RandomSampler";
 import { Vec2, Vec3 } from "../Vec.js";
-import Colour, { ColourSpaceName } from "../Colour";
+import Colour from "../Colour";
 
 export interface Integrator {
   render(scene: Scene): FrameBuffer<Vec3>
@@ -68,6 +68,8 @@ export interface Ray {
 export interface DesaturationStrategy {
   desaturate(wavelength: number, amount: number, integrationSampleCount: number): Colour;
 }
+
+export type ColourSpaceName = 'REC.709' | 'XYZ' | 'xyY' | 'sRGB' | 'REC.2020' | 'DCI-P3';
 
 export interface ColourSpace {
   name: ColourSpaceName;
