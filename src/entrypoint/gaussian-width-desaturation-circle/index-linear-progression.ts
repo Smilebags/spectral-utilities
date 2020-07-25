@@ -96,7 +96,7 @@ function drawPoints(points: { colour: Colour, location: Vec2 }[]): void {
 }
 
 function isColourOutOfRec709Gamut(colour: Colour): boolean {
-  const rec709Colour = colour.toRec709();
+  const rec709Colour = colour.to('REC.709');
   return (
     rec709Colour.triplet.x >= 1 ||
     rec709Colour.triplet.y >= 1 ||
