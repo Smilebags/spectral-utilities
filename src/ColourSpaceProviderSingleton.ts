@@ -70,16 +70,16 @@ const sRGB: ColourSpace = {
   to(colour: Vec3) {
     const rec = rec709.to(colour);
     return new Vec3(
-      clamp(rec.x, 0, 1) ** 2.2,
-      clamp(rec.y, 0, 1) ** 2.2,
-      clamp(rec.z, 0, 1) ** 2.2,
+      clamp(rec.x, 0, 1) ** (1 / 2.2),
+      clamp(rec.y, 0, 1) ** (1 / 2.2),
+      clamp(rec.z, 0, 1) ** (1 / 2.2),
     );
   },
   from(colour: Vec3) {
     const rec = new Vec3(
-      colour.x ** (1 / 2.2),
-      colour.y ** (1 / 2.2),
-      colour.z ** (1 / 2.2),
+      colour.x ** 2.2,
+      colour.y ** 2.2,
+      colour.z ** 2.2,
     );
     return rec709.from(rec);
   },
