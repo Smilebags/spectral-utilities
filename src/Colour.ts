@@ -6,7 +6,7 @@ import { Spectrum } from "./types/index.js";
 import { ColourSpaceProvider } from "./ColourSpaceProvider";
 import colourSpaceProviderSingleton from "./ColourSpaceProviderSingleton.js";
 
-export type ColourSpaceName = 'REC.709' | 'XYZ' | 'xyY' | 'sRGB';
+export type ColourSpaceName = 'REC.709' | 'XYZ' | 'xyY' | 'sRGB' | 'REC.2020';
 
 export default class Colour {
 
