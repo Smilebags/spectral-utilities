@@ -3,18 +3,18 @@ import { mapValue, sleep } from "../../Util.js";
 import CanvasOutput from "../../CanvasOutput.js";
 import { Vec2 } from "../../Vec.js";
 import GaussianWideningStrategy from "../../DesaturationStrategy/GaussianWideningStrategy.js";
-import { adjustedCumulative, findFirstIndex } from './xy-distance.js';
+import { ColourSpaceName } from "../../types/index.js";
 
 const CLIP_OUT_OF_GAMUT = false;
 const WAVELENGTH_LOW = 420;
 const WAVELENGTH_HIGH = 670;
 const CANVAS_SIZE = 1500;
-
+const DISPLAY_SPACE: ColourSpaceName = 'REC.2020';
 
 const refineEl = document.querySelector('#refine') as HTMLButtonElement;
 const canvasEl = document.querySelector('canvas')!;
 
-const canvasOutput = new CanvasOutput(canvasEl, CANVAS_SIZE, CANVAS_SIZE, true);
+const canvasOutput = new CanvasOutput(canvasEl, CANVAS_SIZE, CANVAS_SIZE, true, DISPLAY_SPACE);
 
 const state = {
   desaturation: 1,
@@ -96,7 +96,7 @@ function drawPoints(points: { colour: Colour, location: Vec2 }[]): void {
       if (index === 0) {
         return;
       }
-      if (isColourOutOfRec709Gamut(colour) && CLIP_OUT_OF_GAMUT) {
+      if (isColourOutOfGamut(colour) && CLIP_OUT_OF_GAMUT) {
         return;
       }
       canvasOutput.drawLine({
@@ -108,14 +108,14 @@ function drawPoints(points: { colour: Colour, location: Vec2 }[]): void {
   });
 }
 
-function isColourOutOfRec709Gamut(colour: Colour): boolean {
-  const rec709Colour = colour.to('REC.709');
+function isColourOutOfGamut(colour: Colour): boolean {
+  const inColourSpaceColour = colour.to(DISPLAY_SPACE);
   return (
-    rec709Colour.triplet.x >= 1 ||
-    rec709Colour.triplet.y >= 1 ||
-    rec709Colour.triplet.z >= 1 ||
-    rec709Colour.triplet.x <= 0 ||
-    rec709Colour.triplet.y <= 0 ||
-    rec709Colour.triplet.z <= 0
+    inColourSpaceColour.triplet.x >= 1 ||
+    inColourSpaceColour.triplet.y >= 1 ||
+    inColourSpaceColour.triplet.z >= 1 ||
+    inColourSpaceColour.triplet.x <= 0 ||
+    inColourSpaceColour.triplet.y <= 0 ||
+    inColourSpaceColour.triplet.z <= 0
   );
 }
