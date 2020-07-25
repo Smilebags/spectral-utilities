@@ -4,6 +4,7 @@ import { ColourSpaceName } from "./types/index.js";
 import colourSpaceProviderSingleton from "./ColourSpaceProviderSingleton.js";
 
 const GREY = new Colour(new Vec3(0.5,0.5,0.5),'XYZ', colourSpaceProviderSingleton);
+const BLACK = new Colour(new Vec3(0.1,0.1,0.1),'XYZ', colourSpaceProviderSingleton);
 
 export default class CanvasOutput {
   private context: CanvasRenderingContext2D;
@@ -12,9 +13,9 @@ export default class CanvasOutput {
     private canvasEl: HTMLCanvasElement,
     public width: number = 100,
     public height: number = 100,
-    private clipTooBright = false,
+    private clipOutOfGamut = false,
     private targetSpace: ColourSpaceName = 'sRGB',
-    private background: Colour = GREY,
+    private background: Colour = BLACK,
   ) {
     this.canvasEl.height = height;
     this.canvasEl.width = width;
@@ -22,6 +23,10 @@ export default class CanvasOutput {
     this.imageData = new ImageData(width, height);
     this.clear();
     // setInterval(() => this.redraw(), 50);
+  }
+
+  setTargetSpace(space: ColourSpaceName) {
+    this.targetSpace = space;
   }
 
   drawLine(options: {lineWidth: number, from: Vec2, to: Vec2, color: Colour }): void {
@@ -78,7 +83,7 @@ export default class CanvasOutput {
 
   clear(redraw = false) {
     const triplet = this.background.to(this.targetSpace).triplet;
-    for (let i = 0; i < this.imageData.data.length; i++) {
+    for (let i = 0; i < this.imageData.data.length; i += 4) {
       this.imageData.data[i] = Math.round(triplet.x * 255);
       this.imageData.data[i + 1] = Math.round(triplet.y * 255);
       this.imageData.data[i + 2] = Math.round(triplet.z * 255);
@@ -89,22 +94,28 @@ export default class CanvasOutput {
     }
   }
 
-  setPixel(color: Vec3, coords: Vec2) {
+  setPixel(colour: Colour, coords: Vec2) {
+    const triplet = colour.to(this.targetSpace).triplet;
     const offset = ((coords.y * this.width) + coords.x) * 4;
     if (
-      this.clipTooBright && (
-      color.x >= 1 ||
-      color.y >= 1 ||
-      color.z >= 1 )
+      this.clipOutOfGamut && (
+      triplet.x > 1 ||
+      triplet.y > 1 ||
+      triplet.z > 1 ||
+      triplet.x < 0 ||
+      triplet.y < 0 ||
+      triplet.z < 0 )
     ) {
       this.imageData.data[offset + 0] = 0;
       this.imageData.data[offset + 1] = 0;
       this.imageData.data[offset + 2] = 0;
+      this.imageData.data[offset + 3] = 0;
       return;
     }
-    this.imageData.data[offset + 0] = color.x * 255;
-    this.imageData.data[offset + 1] = color.y * 255;
-    this.imageData.data[offset + 2] = color.z * 255;
+    this.imageData.data[offset + 0] = triplet.x * 255;
+    this.imageData.data[offset + 1] = triplet.y * 255;
+    this.imageData.data[offset + 2] = triplet.z * 255;
+    this.imageData.data[offset + 3] = 255;
   }
 
   redraw() {
