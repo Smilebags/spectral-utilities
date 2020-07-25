@@ -49,6 +49,22 @@ const rec2020 = new GenericColourSpace(
   fromD65,
 );
 
+const dcip3 = new GenericColourSpace(
+  'DCI-P3',
+  [
+    [2.72539403, -1.01800301, -0.4401632],
+    [-0.79516803, 1.68973205, 0.02264719],
+    [0.04124189, -0.08763902, 1.10092938],
+  ],
+  [
+    [4.45169816e-01, 2.77134409e-01, 1.72282670e-01],
+    [2.09491678e-01, 7.21595254e-01, 6.89130679e-02],
+    [-3.63410132e-17, 4.70605601e-02, 9.07355394e-01],
+  ],
+  toD65,
+  fromD65,
+);
+
 const sRGB: ColourSpace = {
   name: 'sRGB',
   to(colour: Vec3) {
@@ -89,5 +105,6 @@ const spaces: ColourSpace[] = [
   rec709,
   xyY,
   rec2020,
+  dcip3,
 ];
 export default new ColourSpaceProvider(spaces);
