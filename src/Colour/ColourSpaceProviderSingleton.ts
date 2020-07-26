@@ -4,6 +4,21 @@ import { ColourSpace } from "../types/index.js";
 import { clamp } from "../Util.js";
 import { Vec3 } from "../Vec.js";
 
+function toSrgbEotf(colour: Vec3) {
+  return new Vec3(
+    colour.x < 0 ? -1 : clamp(colour.x, 0, 1) ** (1 / 2.2),
+    colour.y < 0 ? -1 : clamp(colour.y, 0, 1) ** (1 / 2.2),
+    colour.z < 0 ? -1 : clamp(colour.z, 0, 1) ** (1 / 2.2),
+  );
+}
+function fromSrgbEotf(colour: Vec3) {
+  return new Vec3(
+    colour.x ** 2.2,
+    colour.y ** 2.2,
+    colour.z ** 2.2,
+  );
+}
+
 const toD65: Matrix = [
   [0.9531874, -0.0265906, 0.0238731],
   [-0.0382467, 1.0288406, 0.0094060],
@@ -65,23 +80,23 @@ const dcip3 = new GenericColourSpace(
   fromD65,
 );
 
+const displayP3: ColourSpace = {
+  name: 'Display-P3',
+  to(colour: Vec3) {
+    return toSrgbEotf(dcip3.to(colour));
+  },
+  from(colour: Vec3) {
+    return dcip3.from(fromSrgbEotf(colour));
+  },
+};
+
 const sRGB: ColourSpace = {
   name: 'sRGB',
   to(colour: Vec3) {
-    const rec = rec709.to(colour);
-    return new Vec3(
-      rec.x < 0 ? -1 : clamp(rec.x, 0, 1) ** (1 / 2.2),
-      rec.y < 0 ? -1 : clamp(rec.y, 0, 1) ** (1 / 2.2),
-      rec.z < 0 ? -1 : clamp(rec.z, 0, 1) ** (1 / 2.2),
-    );
+    return toSrgbEotf(rec709.to(colour));
   },
   from(colour: Vec3) {
-    const rec = new Vec3(
-      colour.x ** 2.2,
-      colour.y ** 2.2,
-      colour.z ** 2.2,
-    );
-    return rec709.from(rec);
+    return rec709.from(fromSrgbEotf(colour));
   },
 };
 
@@ -106,5 +121,6 @@ const spaces: ColourSpace[] = [
   xyY,
   rec2020,
   dcip3,
+  displayP3,
 ];
 export default new ColourSpaceProvider(spaces);

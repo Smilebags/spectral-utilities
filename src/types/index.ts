@@ -69,7 +69,7 @@ export interface DesaturationStrategy {
   desaturate(wavelength: number, amount: number, integrationSampleCount: number): Colour;
 }
 
-export type ColourSpaceName = 'REC.709' | 'XYZ' | 'xyY' | 'sRGB' | 'REC.2020' | 'DCI-P3';
+export type ColourSpaceName = 'REC.709' | 'XYZ' | 'xyY' | 'sRGB' | 'REC.2020' | 'DCI-P3' | 'Display-P3';
 
 export interface ColourSpace {
   name: ColourSpaceName;
