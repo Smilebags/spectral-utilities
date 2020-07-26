@@ -1,9 +1,9 @@
 import { SpectralColourPicker } from "../../SpectralColourPicker.js";
 import CanvasOutput from "../../CanvasOutput.js";
-import Colour from "../../Colour.js";
+import Colour from "../../Colour/Colour.js";
 import { Vec3 } from "../../Vec.js";
 import { clamp } from "../../Util.js";
-import colourSpaceProviderSingleton from "../../ColourSpaceProviderSingleton.js";
+import colourSpaceProviderSingleton from "../../Colour/ColourSpaceProviderSingleton.js";
 
 
 const blackEl = document.querySelector('#black') as HTMLCanvasElement;

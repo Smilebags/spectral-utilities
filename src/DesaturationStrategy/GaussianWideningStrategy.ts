@@ -1,6 +1,6 @@
 import { DesaturationStrategy } from "../types/index.js";
 import { GaussianSpectrum } from "../Spectrum/GaussianSpectrum.js";
-import Colour from "../Colour.js";
+import Colour from "../Colour/Colour.js";
 
 
 export default class GaussianWideningStrategy implements DesaturationStrategy {

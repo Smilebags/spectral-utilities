@@ -1,8 +1,8 @@
 import GenericColourSpace, { Matrix } from "./ColourSpace.js";
 import { ColourSpaceProvider } from "./ColourSpaceProvider.js";
-import { ColourSpace } from "./types/index.js";
-import { clamp } from "./Util.js";
-import { Vec3 } from "./Vec.js";
+import { ColourSpace } from "../types/index.js";
+import { clamp } from "../Util.js";
+import { Vec3 } from "../Vec.js";
 
 const toD65: Matrix = [
   [0.9531874, -0.0265906, 0.0238731],

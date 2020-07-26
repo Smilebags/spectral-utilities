@@ -1,5 +1,4 @@
-import { ColourSpace } from "./types/index.js";
-import { ColourSpaceName } from "./Colour.js";
+import { ColourSpace, ColourSpaceName } from "../types/index.js";
 
 export class ColourSpaceProvider {
   constructor(

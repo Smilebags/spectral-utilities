@@ -1,6 +1,6 @@
 import { CameraSample } from "../RandomSampler";
 import { Vec2, Vec3 } from "../Vec.js";
-import Colour from "../Colour";
+import Colour from "../Colour/Colour";
 
 export interface Integrator {
   render(scene: Scene): FrameBuffer<Vec3>

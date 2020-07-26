@@ -1,4 +1,4 @@
-import Colour from "../../Colour.js";
+import Colour from "../../Colour/Colour.js";
 import { mapValue } from "../../Util.js";
 
 const LOW = 390;

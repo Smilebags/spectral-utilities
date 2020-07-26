@@ -1,4 +1,4 @@
-import Colour from "../Colour.js";
+import Colour from "../Colour/Colour.js";
 import CanvasOutput from "../CanvasOutput.js";
 import { Vec2 } from "../Vec.js";
 import { mapValue } from "../Util.js";

@@ -1,10 +1,10 @@
-import Colour from "../../Colour.js";
+import Colour from "../../Colour/Colour.js";
 import { mapValue, sleep } from "../../Util.js";
 import CanvasOutput from "../../CanvasOutput.js";
 import { Vec2 } from "../../Vec.js";
 import GaussianWideningStrategy from "../../DesaturationStrategy/GaussianWideningStrategy.js";
 import { adjustedCumulative, findFirstIndex } from './xy-distance.js';
-import colourSpaceProviderSingleton from "../../ColourSpaceProviderSingleton.js";
+import colourSpaceProviderSingleton from "../../Colour/ColourSpaceProviderSingleton.js";
 
 const CLIP_OUT_OF_GAMUT = false;
 const WAVELENGTH_LOW = 390;

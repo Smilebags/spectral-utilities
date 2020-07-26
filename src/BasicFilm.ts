@@ -2,7 +2,7 @@ import { Film, Radiance } from "./types/index.js";
 import { Vec2, Vec3 } from "./Vec.js";
 import CanvasOutput from "./CanvasOutput.js";
 import { CameraSample } from "./RandomSampler.js";
-import Colour from "./Colour.js";
+import Colour from "./Colour/Colour.js";
 import { mapValue } from "./Util.js";
 
 export default class BasicFilm implements Film {

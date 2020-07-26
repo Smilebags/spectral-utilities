@@ -1,5 +1,5 @@
-import { Vec3 } from "./Vec.js";
-import { lerp } from "./Util.js";
+import { Vec3 } from "../Vec.js";
+import { lerp } from "../Util.js";
 
 type Vec3Lookup = [number, Vec3][];
 

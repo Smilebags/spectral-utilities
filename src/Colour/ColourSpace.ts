@@ -1,7 +1,7 @@
-import { ColourSpaceName } from "./Colour.js";
-import { ColourSpace } from "./types/index.js";
-import { matrixMultiply } from "./Util.js";
-import { Vec3 } from "./Vec.js";
+import { ColourSpaceName } from "../types/index.js";
+import { ColourSpace } from "../types/index.js";
+import { matrixMultiply } from "../Util.js";
+import { Vec3 } from "../Vec.js";
 
 export type Matrix = [[number,number,number],[number,number,number],[number,number,number]];
 

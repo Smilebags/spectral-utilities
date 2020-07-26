@@ -1,10 +1,10 @@
-import Colour from "../../Colour.js";
+import Colour from "../../Colour/Colour.js";
 import { mapValue, sleep } from "../../Util.js";
 import CanvasOutput from "../../CanvasOutput.js";
 import { Vec2, Vec3 } from "../../Vec.js";
 import GaussianWideningStrategy from "../../DesaturationStrategy/GaussianWideningStrategy.js";
 import { ColourSpaceName } from "../../types/index.js";
-import colourSpaceProviderSingleton from "../../ColourSpaceProviderSingleton.js";
+import colourSpaceProviderSingleton from "../../Colour/ColourSpaceProviderSingleton.js";
 
 const colourSpaceOptionEl = document.querySelector('#colour-space') as HTMLOptionElement;
 
