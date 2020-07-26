@@ -4,7 +4,6 @@ import CanvasOutput from "../../CanvasOutput.js";
 import { Vec2, Vec3 } from "../../Vec.js";
 import GaussianWideningStrategy from "../../DesaturationStrategy/GaussianWideningStrategy.js";
 import { ColourSpaceName } from "../../types/index.js";
-import colourSpaceProviderSingleton from "../../Colour/ColourSpaceProviderSingleton.js";
 
 const colourSpaceOptionEl = document.querySelector('#colour-space') as HTMLOptionElement;
 
@@ -222,7 +221,6 @@ function renderAbneySwatches(colour: Colour, canvasOutput: CanvasOutput) {
       new Colour(
         new Vec3(1,1,1),
         'XYZ',
-        colourSpaceProviderSingleton,
       ),
       desaturation);
     for (let y = 0; y < SWATCH_SIZE; y++) {

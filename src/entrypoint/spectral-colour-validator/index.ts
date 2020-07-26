@@ -3,7 +3,6 @@ import CanvasOutput from "../../CanvasOutput.js";
 import Colour from "../../Colour/Colour.js";
 import { Vec3 } from "../../Vec.js";
 import { clamp } from "../../Util.js";
-import colourSpaceProviderSingleton from "../../Colour/ColourSpaceProviderSingleton.js";
 
 
 const blackEl = document.querySelector('#black') as HTMLCanvasElement;
@@ -13,12 +12,12 @@ const ieblackEl = document.querySelector('#ieblack') as HTMLCanvasElement;
 const iegreyEl = document.querySelector('#iegrey') as HTMLCanvasElement;
 const iewhiteEl = document.querySelector('#iewhite') as HTMLCanvasElement;
 
-fillCanvasWithColour(blackEl, new Colour(new Vec3(0.3128, 0.3290, 0), 'xyY', colourSpaceProviderSingleton));
-fillCanvasWithColour(greyEl, new Colour(new Vec3(0.3128, 0.3290, 0.5), 'xyY', colourSpaceProviderSingleton));
-fillCanvasWithColour(whiteEl, new Colour(new Vec3(0.3128, 0.3290, 0.99), 'xyY', colourSpaceProviderSingleton));
-fillCanvasWithColour(ieblackEl, new Colour(new Vec3(0,0,0), 'XYZ', colourSpaceProviderSingleton));
-fillCanvasWithColour(iegreyEl, new Colour(new Vec3(0.5, 0.5, 0.5), 'XYZ', colourSpaceProviderSingleton));
-fillCanvasWithColour(iewhiteEl, new Colour(new Vec3(1,1,1), 'XYZ', colourSpaceProviderSingleton));
+fillCanvasWithColour(blackEl, new Colour(new Vec3(0.3128, 0.3290, 0), 'xyY'));
+fillCanvasWithColour(greyEl, new Colour(new Vec3(0.3128, 0.3290, 0.5), 'xyY'));
+fillCanvasWithColour(whiteEl, new Colour(new Vec3(0.3128, 0.3290, 0.99), 'xyY'));
+fillCanvasWithColour(ieblackEl, new Colour(new Vec3(0,0,0), 'XYZ'));
+fillCanvasWithColour(iegreyEl, new Colour(new Vec3(0.5, 0.5, 0.5), 'XYZ'));
+fillCanvasWithColour(iewhiteEl, new Colour(new Vec3(1,1,1), 'XYZ'));
 
 function fillCanvasWithColour(canvasEl: HTMLCanvasElement, colour: Colour) {
   const ctx = canvasEl.getContext('2d')!;

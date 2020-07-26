@@ -11,7 +11,7 @@ export default class Colour {
   constructor(
     public triplet: Vec3,
     public colourSpace: ColourSpaceName = 'REC.709',
-    private colourSpaceProvider: ColourSpaceProvider,
+    private colourSpaceProvider: ColourSpaceProvider = colourSpaceProviderSingleton,
   ) { }
 
   static fromSpectrum(spectrum: Spectrum, resolution = 2 ** 7, low = 400, high = 780): Colour {

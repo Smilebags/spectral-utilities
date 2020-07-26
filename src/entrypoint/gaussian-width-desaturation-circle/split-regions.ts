@@ -4,7 +4,6 @@ import CanvasOutput from "../../CanvasOutput.js";
 import { Vec2 } from "../../Vec.js";
 import GaussianWideningStrategy from "../../DesaturationStrategy/GaussianWideningStrategy.js";
 import { adjustedCumulative, findFirstIndex } from './xy-distance.js';
-import colourSpaceProviderSingleton from "../../Colour/ColourSpaceProviderSingleton.js";
 
 const CLIP_OUT_OF_GAMUT = false;
 const WAVELENGTH_LOW = 390;
@@ -90,7 +89,7 @@ function drawRing(highQuality: boolean) {
     const scaledRed = redColour.triplet.multiply(1 - progress);
     const scaledBlue = blueColour.triplet.multiply(progress);
     const newColourCoordinate = scaledRed.add(scaledBlue);
-    const colour = new Colour(newColourCoordinate, 'XYZ', colourSpaceProviderSingleton);
+    const colour = new Colour(newColourCoordinate, 'XYZ');
     
     return { colour, location };
   });
