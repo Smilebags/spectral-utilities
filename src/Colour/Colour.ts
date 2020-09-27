@@ -100,6 +100,9 @@ export default class Colour {
   }
 
   lerp(colour: Colour, mix: number): Colour {
+    if (this.colourSpace !== colour.colourSpace) {
+      throw 'Colour spaces must match';
+    }
     return new Colour(new Vec3(
       lerp(this.triplet.x, colour.triplet.x, mix),
       lerp(this.triplet.y, colour.triplet.y, mix),
@@ -108,13 +111,17 @@ export default class Colour {
   }
 
   normalise(): Colour {
-    const max = Math.max(this.triplet.x, this.triplet.y, this.triplet.z);
+    const max = this.max;
     const triplet = new Vec3(
       this.triplet.x / max,
       this.triplet.y / max,
       this.triplet.z / max,
     );
     return new Colour(triplet, this.colourSpace, this.colourSpaceProvider);
+  }
+
+  get max(): number {
+    return Math.max(this.triplet.x, this.triplet.y, this.triplet.z);
   }
 
   get sum(): number {

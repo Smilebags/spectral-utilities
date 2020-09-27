@@ -6,9 +6,9 @@ import { Vec3 } from "../Vec.js";
 
 function toSrgbEotf(colour: Vec3) {
   return new Vec3(
-    colour.x < 0 ? -1 : clamp(colour.x, 0, 1) ** (1 / 2.2),
-    colour.y < 0 ? -1 : clamp(colour.y, 0, 1) ** (1 / 2.2),
-    colour.z < 0 ? -1 : clamp(colour.z, 0, 1) ** (1 / 2.2),
+    colour.x < 0 ? -1 : colour.x ** (1 / 2.2),
+    colour.y < 0 ? -1 : colour.y ** (1 / 2.2),
+    colour.z < 0 ? -1 : colour.z ** (1 / 2.2),
   );
 }
 function fromSrgbEotf(colour: Vec3) {
@@ -115,6 +115,36 @@ const xyY: ColourSpace = {
     return new Vec3(X, Y, Z);
   },
 };
+
+const XYZ = new GenericColourSpace(
+  'XYZ',
+  [
+    [1,0,0],
+    [0,1,0],
+    [0,0,1],
+  ],
+  [
+    [1,0,0],
+    [0,1,0],
+    [0,0,1],
+  ],
+);
+const XYZD65 = new GenericColourSpace(
+  'XYZD65',
+  [
+    [1,0,0],
+    [0,1,0],
+    [0,0,1],
+  ],
+  [
+    [1,0,0],
+    [0,1,0,],
+    [0,0,1],
+  ],
+  toD65,
+  fromD65,
+);
+
 const spaces: ColourSpace[] = [
   sRGB,
   rec709,
@@ -122,5 +152,7 @@ const spaces: ColourSpace[] = [
   rec2020,
   dcip3,
   displayP3,
+  XYZ,
+  XYZD65,
 ];
 export default new ColourSpaceProvider(spaces);
