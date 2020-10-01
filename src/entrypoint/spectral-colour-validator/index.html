@@ -6,13 +6,114 @@
     <title>Page Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="index.js" type="module"></script>
+    <style>
+        .items {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+        }
+    </style>
 </head>
 <body>
-    <canvas id="black"></canvas>
-    <canvas id="grey"></canvas>
-    <canvas id="white"></canvas>
-    <canvas id="ieblack"></canvas>
-    <canvas id="iegrey"></canvas>
-    <canvas id="iewhite"></canvas>
+    <div class="items">
+        <div class="item">
+            <p>D65 black</p>
+            <canvas
+                data-colourspace='xyY'
+                data-triplet='0.3128, 0.3290, 0'
+            ></canvas>
+        </div>
+        <div class="item">
+            <p>D65 grey</p>
+            <canvas
+                data-colourspace='xyY'
+                data-triplet='0.3128, 0.3290, 0.5'
+            ></canvas>
+        </div>
+        <div class="item">
+            <p>D65 white</p>
+            <canvas
+                data-colourspace='xyY'
+                data-triplet='0.3128, 0.3290, 0.99'
+            ></canvas>
+        </div>
+        <div class="item">
+            <p>IE black</p>
+            <canvas
+                data-colourspace='XYZ'
+                data-triplet='0,0,0'
+            ></canvas>
+        </div>
+        <div class="item">
+            <p>IE grey</p>
+            <canvas
+                data-colourspace='XYZ'
+                data-triplet='0.5, 0.5, 0.5'
+            ></canvas>
+        </div>
+        <div class="item">
+            <p>IE white</p>
+            <canvas
+                data-colourspace='XYZ'
+                data-triplet='1,1,1'
+            ></canvas>
+        </div>
+        <div class="item">
+            <canvas
+                data-colourspace='sRGB'
+                data-triplet='0.2,0,0'
+            ></canvas>
+        </div>
+        <div class="item">
+            <canvas
+                data-colourspace='sRGB'
+                data-triplet='0.5,0,0'
+            ></canvas>
+        </div>
+        <div class="item">
+            <canvas
+                data-colourspace='sRGB'
+                data-triplet='0.8,0,0'
+            ></canvas>
+        </div>
+        <div class="item">
+            <canvas
+                data-colourspace='REC.709'
+                data-triplet='0.2,0,0'
+            ></canvas>
+        </div>
+        <div class="item">
+            <canvas
+                data-colourspace='REC.709'
+                data-triplet='0.5,0,0'
+            ></canvas>
+        </div>
+        <div class="item">
+            <canvas
+                data-colourspace='REC.709'
+                data-triplet='0.8,0,0'
+            ></canvas>
+        </div>
+        <div class="item">
+            <p>sRGB red</p>
+            <canvas
+                data-colourspace='sRGB'
+                data-triplet='1,0,0'
+            ></canvas>
+        </div>
+        <div class="item">
+            <p>sRGB green</p>
+            <canvas
+                data-colourspace='sRGB'
+                data-triplet='0,1,0'
+            ></canvas>
+        </div>
+        <div class="item">
+            <p>sRGB blue</p>
+            <canvas
+                data-colourspace='sRGB'
+                data-triplet='0,0,1'
+            ></canvas>
+        </div>
+    </div>
 </body>
 </html>
