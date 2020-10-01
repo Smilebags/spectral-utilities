@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Gamut Mapping</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="index.js" type="module"></script>
+    <style>
+        input {
+            width: 1000px;
+            color: black;
+        }
+        p {
+            color: black;
+        }
+        * {
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+
+        .swatches {
+            width: 1000px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 300px;
+        }
+        html {
+            background-color: #808080;
+        }
+
+        .swatch {
+            width: 1000px;
+            height: 100px;
+            border: 1px solid black;
+            image-rendering: crisp-edges;
+        }
+    </style>
+</head>
+<body>
+    <input
+        type="range"
+        id="swatch-wavelength"
+        min="420"
+        max="670"
+        value="420"
+        step="0.1"
+    ><br>
+    <p id="current-wavelength"></p>
+    <p>Gaussian desaturation swatch</p>
+    <canvas id="curve-swatch" class="swatch"></canvas><br>
+    <br>
+    <p>Abney swatch</p>
+    <canvas id="abney-swatch" class="swatch"></canvas><br>
+</body>
+</html>
