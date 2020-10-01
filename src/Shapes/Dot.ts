@@ -9,7 +9,7 @@ export default class Dot {
   render(ctx: CanvasRenderingContext2D): void {
     ctx.save();
     const col = this.callback();
-    const rgb = col.toRec709().clamp().triplet;
+    const rgb = col.to('REC.709').clamp().triplet;
     const rgbString = `rgb(${rgb.x * 255}, ${rgb.y * 255}, ${rgb.z * 255})`;
     ctx.fillStyle = rgbString;
     ctx.beginPath();
