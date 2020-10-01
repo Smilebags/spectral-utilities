@@ -108,7 +108,7 @@ export default class CanvasOutput {
       this.imageData.data[offset + 0] = 0;
       this.imageData.data[offset + 1] = 0;
       this.imageData.data[offset + 2] = 0;
-      this.imageData.data[offset + 3] = 0;
+      this.imageData.data[offset + 3] = 255;
       return;
     }
     this.imageData.data[offset + 0] = triplet.x * 255;
