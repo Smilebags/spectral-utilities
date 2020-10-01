@@ -47,13 +47,6 @@ test(`White XYZ to REC.709 works`, () => {
   expect(destination.triplet.y).toBeCloseTo(1, 3);
 });
 
-test(`White REC.709 to xyY works`, () => {
-  const base = new Colour(new Vec3(1, 1, 1), 'REC.709');
-  const destination = base.to('xyY');
-  expect(destination.triplet.x).toBeCloseTo(0.313, 3);
-  expect(destination.triplet.y).toBeCloseTo(0.329, 3);
-});
-
 
 const rec709ToxyYTestCases: [string, Vec3, Vec3][] = [
   ['White', new Vec3(1, 1, 1), new Vec3(0.313, 0.329, 1)],
