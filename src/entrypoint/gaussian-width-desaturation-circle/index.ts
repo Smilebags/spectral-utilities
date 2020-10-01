@@ -5,14 +5,11 @@ import { Vec2, Vec3 } from "../../Vec.js";
 import GaussianWideningStrategy from "../../DesaturationStrategy/GaussianWideningStrategy.js";
 import { ColourSpaceName } from "../../types/index.js";
 
-const colourSpaceOptionEl = document.querySelector('#colour-space') as HTMLOptionElement;
-
-
 const CLIP_OUT_OF_GAMUT = false;
 const WAVELENGTH_LOW = 420;
 const WAVELENGTH_HIGH = 670;
 const CANVAS_SIZE = 1000;
-let DISPLAY_SPACE: ColourSpaceName = colourSpaceOptionEl.value as ColourSpaceName;
+const DISPLAY_SPACE: ColourSpaceName = 'sRGB';
 
 
 const canvasEl = document.querySelector('canvas#circle')! as HTMLCanvasElement;
@@ -20,6 +17,7 @@ const circleCanvasOutput = new CanvasOutput(canvasEl, CANVAS_SIZE, CANVAS_SIZE, 
 
 const highQualityEl = document.querySelector('#high') as HTMLButtonElement;
 const lowQualityEl = document.querySelector('#low') as HTMLButtonElement;
+
 lowQualityEl.addEventListener('click', () => {
   render();
 });
@@ -27,53 +25,41 @@ highQualityEl.addEventListener('click', () => {
   render(true);
 });
 
-colourSpaceOptionEl.addEventListener('change', (e) => {
-  //@ts-ignore
-  DISPLAY_SPACE = e.target.value;
-  circleCanvasOutput.setTargetSpace(DISPLAY_SPACE);
-  curveCanvasOutput.setTargetSpace(DISPLAY_SPACE);
-  abneyCanvasOutput.setTargetSpace(DISPLAY_SPACE);
-  circleCanvasOutput.clear();
-  renderSwatches(SWATCH_WAVELENGTH);
-});
-
-
-const state = {
-  desaturation: 1,
-};
+render();
 
 async function render(highQuality = false) {
   const SATURATION_SAMPLES = highQuality ? 240 : 220;
 
   for (let i = 0; i < SATURATION_SAMPLES; i++) {
     await sleep(1);
-    state.desaturation = (i / (SATURATION_SAMPLES - 1)) ** 1.2;
-    drawRing(highQuality);
+    const desaturation = (i / (SATURATION_SAMPLES - 1)) ** 1.2;
+    drawRing(desaturation, highQuality);
   }
 }
 
-function drawRing(highQuality: boolean) {
+function drawRing(desaturation: number, highQuality: boolean) {
   const HUE_SAMPLES = highQuality ? 720 : 120;
   const SPECTRUM_SAMPLE_SHIFT = highQuality ? 2 : 0;
 
   const gaussianWideningStrategy = new GaussianWideningStrategy(WAVELENGTH_LOW, WAVELENGTH_HIGH);
   const points = createBoundaryValues(HUE_SAMPLES);
   const samplePoints = points.map((point, index, arr) => {
-    const spectrumSamplePower = mapValue(state.desaturation ** 2, 0, 1, 6, 4) + SPECTRUM_SAMPLE_SHIFT;
+    const spectrumSamplePower = mapValue(desaturation ** 2, 0, 1, 6, 4) + SPECTRUM_SAMPLE_SHIFT;
     const spectrumSampleCount = Math.round(2 ** spectrumSamplePower);
     const colour = gaussianWideningStrategy.desaturate(
       point,
-      state.desaturation,
+      desaturation,
       spectrumSampleCount,
-    ).multiply(2);
+    );
+    const adaptedColour = colour.to('XYZD65');
+    adaptedColour.colourSpace = 'XYZ';
     const progress = mapValue(index, 0, arr.length - 1, 0, Math.PI * 2);
-    const radius = mapValue(state.desaturation, 0, 1, 1, 0);
+    const radius = mapValue(desaturation, 0, 1, 1, 0);
     const location = new Vec2(
       Math.sin(progress) * radius,
       Math.cos(progress) * radius,
     );
-    
-    return { colour, location };
+    return { colour: adaptedColour.multiply(2), location };
   });
   drawPoints(samplePoints);
 }
@@ -122,98 +108,4 @@ function isColourOutOfGamut(colour: Colour): boolean {
     inColourSpaceColour.triplet.y <= 0 ||
     inColourSpaceColour.triplet.z <= 0
   );
-}
-
-
-const SWATCH_WIDTH = 200;
-const STEP_COUNT = 20;
-const SWATCH_SIZE = SWATCH_WIDTH / STEP_COUNT;
-
-const curveCanvasEl = document.querySelector('canvas#curve-swatch')! as HTMLCanvasElement;
-const abneyCanvasEl = document.querySelector('canvas#abney-swatch')! as HTMLCanvasElement;
-const swatchWavelengthEl = document.querySelector('#swatch-wavelength') as HTMLInputElement;
-let SWATCH_WAVELENGTH = Number(swatchWavelengthEl.value);
-
-swatchWavelengthEl.addEventListener('input', (e) => {
-  //@ts-ignore
-  SWATCH_WAVELENGTH = Number(e.target.value);
-  renderSwatches(SWATCH_WAVELENGTH);
-});
-
-const curveCanvasOutput = new CanvasOutput(
-  curveCanvasEl,
-  SWATCH_WIDTH,
-  10,
-  false,
-  DISPLAY_SPACE,
-);
-const abneyCanvasOutput = new CanvasOutput(
-  abneyCanvasEl,
-  SWATCH_WIDTH,
-  10,
-  false,
-  DISPLAY_SPACE,
-);
-const gaussianWideningStrategy = new GaussianWideningStrategy(WAVELENGTH_LOW, WAVELENGTH_HIGH);
-
-renderSwatches(Number(swatchWavelengthEl.value));
-
-function renderSwatches(wavelength: number) {
-  fillWavelengthDial(wavelength);
-  let startWidth = 0.019;
-  const startSearchStep = 0.003;
-  while(true) {
-    const colour = gaussianWideningStrategy.desaturate(wavelength, startWidth, 2 ** 7);
-    if (colour.to(DISPLAY_SPACE).allPositive) {
-      break;
-    }
-    startWidth += startSearchStep;
-  }
-  const startColour = gaussianWideningStrategy.desaturate(wavelength, startWidth, 2 ** 7);
-  renderCurveSwatches(wavelength, startWidth, curveCanvasOutput);
-  renderAbneySwatches(startColour.to(DISPLAY_SPACE).normalise(), abneyCanvasOutput);
-}
-
-function fillWavelengthDial(wavelength: number) {
-  document.querySelector('#current-wavelength')!.innerHTML = String(wavelength);
-}
-
-
-function renderCurveSwatches(wavelength: number, startWidth: number, canvasOutput: CanvasOutput) {
-  for (let swatchIndex = 0; swatchIndex < STEP_COUNT; swatchIndex++) {
-    const mapped = mapValue(swatchIndex, 0, STEP_COUNT - 1, 0, 1);
-    const curveApplied = mapped ** 1.6;
-    const desaturation = mapValue(curveApplied, 0, 1, startWidth, 0.8);
-    const colour = gaussianWideningStrategy.desaturate(wavelength, desaturation, 2 ** 7);
-    for (let y = 0; y < SWATCH_SIZE; y++) {
-      for (let x = 0; x < SWATCH_SIZE; x++) {
-        canvasOutput.setPixel(
-          colour.normalise(),
-          new Vec2(x + (swatchIndex * SWATCH_SIZE), y));
-      }
-    }
-  }
-  canvasOutput.redraw();
-}
-
-function renderAbneySwatches(colour: Colour, canvasOutput: CanvasOutput) {
-  const destinationColour = new Colour(new Vec3(1,1,1), DISPLAY_SPACE);
-  for (let swatchIndex = 0; swatchIndex < STEP_COUNT; swatchIndex++) {
-    const mapped = mapValue(swatchIndex, 0, STEP_COUNT - 1, 0, 1);
-    const lerpedColour = colour
-      .multiply(1-mapped)
-      .add(destinationColour.multiply(mapped));
-    for (let y = 0; y < SWATCH_SIZE; y++) {
-      for (let x = 0; x < SWATCH_SIZE; x++) {
-        canvasOutput.setPixel(
-          lerpedColour.to(DISPLAY_SPACE),
-          new Vec2((swatchIndex * SWATCH_SIZE) + x, y));
-      }
-    }
-  }
-  canvasOutput.redraw();
-}
-
-function steps(value: number, steps: number): number {
-  return Math.floor(value * steps) / steps;
 }

@@ -3,13 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Gamut Mapping</title>
+    <title>Gaussian Width Desaturation</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="index.js" type="module"></script>
     <style>
-        input {
-            width: 1000px;
-        }
         p {
             color: white;
         }
@@ -17,48 +14,13 @@
             font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
         }
 
-        .swatches {
-            width: 1000px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            height: 300px;
-        }
         html {
             background-color: #404040;
         }
 
-        .swatch {
-            width: 1000px;
-            height: 100px;
-            border: 1px solid black;
-            image-rendering: crisp-edges;
-        }
     </style>
 </head>
 <body>
-    <select name="" id="colour-space">
-        <option value="sRGB" selected>sRGB</option>
-        <option value="REC.709">REC.709</option>
-        <option value="REC.2020">REC.2020</option>
-        <option value="DCI-P3">DCI-P3</option>
-        <option value="Display-P3">Display-P3</option>
-        <option value="XYZ">XYZ</option>
-        <option value="xyY">xyY</option>
-    </select><br>
-    <input
-        type="range"
-        id="swatch-wavelength"
-        min="420"
-        max="670"
-        value="420"
-        step="0.1"
-    ><br>
-    <p id="current-wavelength"></p>
-    <p>Gaussian desaturation swatch</p>
-    <canvas id="curve-swatch" class="swatch"></canvas><br>
-    <br>
-    <p>Abney swatch</p>
-    <canvas id="abney-swatch" class="swatch"></canvas><br>
     <button id="low">Draw draft circle</button><br />
     <button id="high">Draw high quality circle</button><br />
     <p>^^ This may take a few minutes</p>
