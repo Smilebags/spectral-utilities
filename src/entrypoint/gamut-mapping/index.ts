@@ -148,7 +148,7 @@ function renderSaturation() {
   //     return gaussianWideningStrategy.desaturate(pinkProgress, desaturationAmount);
   //   });
   // drawPoints(pinkDesaturationSamples);
-  fillSwatches(lobeDesaturationSamples);
+  // fillSwatches(lobeDesaturationSamples);
 }
 
 function fillSwatches(lobeSamples: Colour[]) {
