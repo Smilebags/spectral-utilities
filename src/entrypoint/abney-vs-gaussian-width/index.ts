@@ -46,7 +46,7 @@ renderSwatches(Number(swatchWavelengthEl.value));
 function renderSwatches(wavelength: number) {
   fillWavelengthDial(wavelength);
   let startWidth = 0.016;
-  const startSearchStep = 0.004;
+  const startSearchStep = 0.003;
   while(true) {
     const colour = gaussianWideningStrategy.desaturate(wavelength, startWidth, 2 ** 7).to('XYZD65');
     colour.colourSpace = 'XYZ';
@@ -68,14 +68,14 @@ function fillWavelengthDial(wavelength: number) {
 function renderCurveSwatches(wavelength: number, startWidth: number, canvasOutput: CanvasOutput) {
   for (let swatchIndex = 0; swatchIndex < STEP_COUNT; swatchIndex++) {
     const mapped = mapValue(swatchIndex, 0, STEP_COUNT - 1, 0, 1);
-    const curveApplied = mapped ** 0.8;
+    const curveApplied = mapped ** 1.2;
     const desaturation = mapValue(curveApplied, 0, 1, startWidth, 0.8);
     const colour = gaussianWideningStrategy.desaturate(wavelength, desaturation, 2 ** 7).to('XYZD65');
     colour.colourSpace = 'XYZ';
     for (let y = 0; y < SWATCH_SIZE; y++) {
       for (let x = 0; x < SWATCH_SIZE; x++) {
         canvasOutput.setPixel(
-          colour.to(WORKING_SPACE).normalise().multiply(0.999),
+          colour.to(WORKING_SPACE).normalise().multiply(0.9999),
           new Vec2(x + (swatchIndex * SWATCH_SIZE), y));
       }
     }
@@ -84,19 +84,24 @@ function renderCurveSwatches(wavelength: number, startWidth: number, canvasOutpu
 }
 
 function renderAbneySwatches(colour: Colour, canvasOutput: CanvasOutput) {
-  const destinationColour = new Colour(new Vec3(1,1,1), WORKING_SPACE);
+  const destinationColour = new Colour(new Vec3(1,1,1), 'sRGB');
   let startColour = colour.to('XYZD65');
   startColour.colourSpace = 'XYZ';
-  startColour = startColour.to(WORKING_SPACE).normalise();
+  startColour = startColour.to('REC.709').normalise().to('sRGB');
   for (let swatchIndex = 0; swatchIndex < STEP_COUNT; swatchIndex++) {
     const mapped = mapValue(swatchIndex, 0, STEP_COUNT - 1, 0, 1);
     const lerpedColour = startColour
       .multiply(1-mapped)
       .add(destinationColour.multiply(mapped));
+    if(swatchIndex === 10) {
+      console.log(startColour.hex);
+      // console.log(destinationColour.hex);
+      // console.log(lerpedColour.hex);
+    }
     for (let y = 0; y < SWATCH_SIZE; y++) {
       for (let x = 0; x < SWATCH_SIZE; x++) {
         canvasOutput.setPixel(
-          lerpedColour.multiply(0.999),
+          lerpedColour.multiply(0.9999),
           new Vec2((swatchIndex * SWATCH_SIZE) + x, y));
       }
     }
