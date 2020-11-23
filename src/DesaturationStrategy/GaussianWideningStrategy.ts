@@ -19,24 +19,39 @@ export default class GaussianWideningStrategy implements DesaturationStrategy {
     return 50 * Math.log(1/(1-desaturation));
   }
 
-  public desaturate(wavelength: number, amount: number, integrationSampleCount: number, wrap = true): Colour {
+  public desaturate(
+    wavelength: number,
+    amount: number,
+    integrationSampleCount: number,
+    wrap = true,
+  ): Colour {
+    return Colour.fromSpectrum(
+      this.desaturateWithInfo(wavelength, amount, wrap).spectrum,
+      integrationSampleCount,
+    );
+  }
+
+  public desaturateWithInfo(
+    wavelength: number,
+    amount: number,
+    wrap = true,
+  ): {
+    spectrum: Spectrum,
+    width: number,
+  } {
     const width = this.getWidthFromDesaturation(amount);
     const base = new GaussianSpectrum(wavelength, width);
       if (!wrap) {
-        return Colour.fromSpectrum(base, integrationSampleCount, this.wavelengthLow, this.wavelengthHigh);
+        return {
+          spectrum: base,
+          width,
+        }
       }
     const below = new GaussianSpectrum(wavelength - this.wavelengthRange, width);
     const above = new GaussianSpectrum(wavelength + this.wavelengthRange, width);
     const twoBelow = new GaussianSpectrum(wavelength - (this.wavelengthRange * 2), width);
     const twoAbove = new GaussianSpectrum(wavelength + (this.wavelengthRange * 2), width);
-    const maxSpectrum: Spectrum = {
-      sample: x => Math.max(
-        base.sample(x),
-        below.sample(x),
-        above.sample(x),
-      ),
-    };
-    
+
     const avgSpectrum: Spectrum = {
       sample: x => arrayAverage([
         base.sample(x),
@@ -47,19 +62,9 @@ export default class GaussianWideningStrategy implements DesaturationStrategy {
       ]),
     };
 
-    return Colour.fromSpectrum(avgSpectrum, integrationSampleCount, this.wavelengthLow, this.wavelengthHigh);
-    
-    // const result = Colour.fromSpectrum(avgSpectrum, integrationSampleCount, this.wavelengthLow, this.wavelengthHigh);
-    // const xyYResult = result.to('xyY');
-    // const Y = xyYResult.triplet.z * 10;
-    // const mappedY = Y / (Y + 1);
-    // xyYResult.triplet.z = mappedY;
-    // return xyYResult;
-    // const clampedY = result.to('xyY');
-    // clampedY.triplet.z = Math.min(clampedY.triplet.z * 2, 1);
-    // return clampedY;
-    // const result = new Colour(new Vec3(averagex, averagey, baseY), 'xyY');
-    // return result;
-    
-  };
+    return {
+      spectrum: avgSpectrum,
+      width,
+    }
+  }
 }
