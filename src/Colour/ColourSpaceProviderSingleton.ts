@@ -138,6 +138,33 @@ const XYZD65 = new GenericColourSpace(
   fromD65,
 );
 
+const lab: ColourSpace = {
+  name: 'lab',
+  to: ({x, y, z}) => {
+    // fudge-numbers in the LAB spec
+    const e = 0.008856;
+    const k = 903.3;
+    const f = (x: number) => {
+      if (x < e) {
+        return ((k * x) + 16) / 116;
+      }
+      return Math.cbrt(x);
+    };
+
+    const fx = f(x);
+    const fy = f(y);
+    const fz = f(z);
+
+    const L = (116 * fy) - 16;
+    const a = 500 * (fx - fy);
+    const b = 200 * (fy - fz);
+    return new Vec3(L, a, b);
+  },
+  from: (col: Vec3): Vec3 => {
+    throw 'not implemented';
+  }
+};
+
 const spaces: ColourSpace[] = [
   sRGB,
   rec709,
@@ -147,5 +174,6 @@ const spaces: ColourSpace[] = [
   displayP3,
   XYZ,
   XYZD65,
+  lab,
 ];
 export default new ColourSpaceProvider(spaces);

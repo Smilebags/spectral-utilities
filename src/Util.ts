@@ -57,3 +57,11 @@ export function matrixMultiply(matrix: Matrix, numbers: [number, number, number]
     matrix[2][0] * numbers[0] + matrix[2][1] * numbers[1] + matrix[2][2] * numbers[2],
   ];
 }
+
+export function arraySum(arr: number[]): number {
+  return arr.reduce((total, current) => (total + current), 0);
+}
+
+export function arrayAverage(arr: number[]): number {
+  return arraySum(arr) / arr.length;
+}

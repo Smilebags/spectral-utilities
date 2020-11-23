@@ -113,12 +113,32 @@ function render(clear = false) {
   }
   if (state.mode === 'hue') {
     renderHue();
-    return;
-  }
-  if (state.mode === 'saturation') {
+  } else {
     renderSaturation();
-    return;
+    
   }
+  // if (state.mode === 'saturation') {
+  //   renderSaturation();
+  // }
+  rendersRGB();
+}
+
+function rendersRGB() {
+  drawPoints([
+    new Colour(new Vec3(1, 0, 0), 'REC.709'),
+    new Colour(new Vec3(1, 0.5, 0), 'REC.709'),
+    new Colour(new Vec3(1, 1, 0), 'REC.709'),
+    new Colour(new Vec3(0.5, 1, 0), 'REC.709'),
+    new Colour(new Vec3(0, 1, 0), 'REC.709'),
+    new Colour(new Vec3(0, 1, 0.5), 'REC.709'),
+    new Colour(new Vec3(0, 1, 1), 'REC.709'),
+    new Colour(new Vec3(0, 0.5, 1), 'REC.709'),
+    new Colour(new Vec3(0, 0, 1), 'REC.709'),
+    new Colour(new Vec3(0.5, 0, 1), 'REC.709'),
+    new Colour(new Vec3(1, 0, 1), 'REC.709'),
+    new Colour(new Vec3(1, 0, 0.5), 'REC.709'),
+    new Colour(new Vec3(1, 0, 0), 'REC.709'),
+  ]);
 }
 
 function renderHue() {
@@ -234,10 +254,16 @@ function drawPoints(points: Colour[]): void {
     .map(point => {
       const xyYlocation = point.to('xyY');
       const mappedLocation = new Vec2(xyYlocation.triplet.x, xyYlocation.triplet.y).add(0.1);
-        return {
-          location: mappedLocation,
-          colour: point,
-        };
+      return {
+        location: mappedLocation,
+        colour: point,
+      };
+      // const labLocation = point.to('lab');
+      // const mappedLocation = new Vec2(labLocation.triplet.y, labLocation.triplet.z).multiply(0.002).add(0.6);
+      // return {
+      //   location: mappedLocation,
+      //   colour: point,
+      // };
     })
     .forEach(({location, colour}, index, arr) => {
       if (index === 0) {

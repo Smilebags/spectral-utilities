@@ -53,13 +53,15 @@ function drawRing(desaturation: number, highQuality: boolean) {
     );
     const adaptedColour = colour.to('XYZD65');
     adaptedColour.colourSpace = 'XYZ';
+    const toneCompressedColour = adaptedColour.to('xyY');
+    toneCompressedColour.triplet.z = reinhard(toneCompressedColour.triplet.z * 8);
     const progress = mapValue(index, 0, arr.length - 1, 0, Math.PI * 2);
     const radius = mapValue(desaturation, 0, 1, 1, 0);
     const location = new Vec2(
       Math.sin(progress) * radius,
       Math.cos(progress) * radius,
     );
-    return { colour: adaptedColour.multiply(2), location };
+    return { colour: toneCompressedColour, location };
   });
   drawPoints(samplePoints);
 }
@@ -108,4 +110,8 @@ function isColourOutOfGamut(colour: Colour): boolean {
     inColourSpaceColour.triplet.y <= 0 ||
     inColourSpaceColour.triplet.z <= 0
   );
+}
+
+function reinhard(x: number) {
+  return x / (x + 1);
 }

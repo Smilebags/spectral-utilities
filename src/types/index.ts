@@ -77,6 +77,7 @@ export type ColourSpaceName =
   'sRGB' |
   'REC.2020' |
   'DCI-P3' |
+  'lab' |
   'Display-P3';
 
 export interface ColourSpace {

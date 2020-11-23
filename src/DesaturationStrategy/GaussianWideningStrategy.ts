@@ -1,6 +1,8 @@
-import { DesaturationStrategy } from "../types/index.js";
+import { DesaturationStrategy, Spectrum } from "../types/index.js";
 import { GaussianSpectrum } from "../Spectrum/GaussianSpectrum.js";
 import Colour from "../Colour/Colour.js";
+import { arrayAverage, arraySum } from "../Util.js";
+import { Vec3 } from "../Vec.js";
 
 
 export default class GaussianWideningStrategy implements DesaturationStrategy {
@@ -18,30 +20,46 @@ export default class GaussianWideningStrategy implements DesaturationStrategy {
   }
 
   public desaturate(wavelength: number, amount: number, integrationSampleCount: number, wrap = true): Colour {
-    const primary = this.locusLobeWideningStrategy(wavelength, amount, integrationSampleCount);
-    if (!wrap) {
-      return primary;
-    }
-    const above = this.locusLobeWideningStrategy(wavelength + this.wavelengthRange, amount, integrationSampleCount);
-    const below = this.locusLobeWideningStrategy(wavelength - this.wavelengthRange, amount, integrationSampleCount);
-    const twoAbove = this.locusLobeWideningStrategy(wavelength + (this.wavelengthRange * 2), amount, integrationSampleCount);
-    const twoBelow = this.locusLobeWideningStrategy(wavelength - (this.wavelengthRange * 2), amount, integrationSampleCount);
-
-    return Colour.fromAverage([
-      primary,
-      above,
-      below,
-      twoAbove,
-      twoBelow,
-    ]).multiply(5);
-  }
-
-  private locusLobeWideningStrategy(wavelength: number, amount: number, integrationSampleCount: number): Colour {
     const width = this.getWidthFromDesaturation(amount);
-    const spectrum = new GaussianSpectrum(
-      wavelength,
-      width,
-    );
-    return Colour.fromSpectrum(spectrum, integrationSampleCount);
+    const base = new GaussianSpectrum(wavelength, width);
+      if (!wrap) {
+        return Colour.fromSpectrum(base, integrationSampleCount, this.wavelengthLow, this.wavelengthHigh);
+      }
+    const below = new GaussianSpectrum(wavelength - this.wavelengthRange, width);
+    const above = new GaussianSpectrum(wavelength + this.wavelengthRange, width);
+    const twoBelow = new GaussianSpectrum(wavelength - (this.wavelengthRange * 2), width);
+    const twoAbove = new GaussianSpectrum(wavelength + (this.wavelengthRange * 2), width);
+    const maxSpectrum: Spectrum = {
+      sample: x => Math.max(
+        base.sample(x),
+        below.sample(x),
+        above.sample(x),
+      ),
+    };
+    
+    const avgSpectrum: Spectrum = {
+      sample: x => arrayAverage([
+        base.sample(x),
+        below.sample(x),
+        above.sample(x),
+        twoBelow.sample(x),
+        twoAbove.sample(x),
+      ]),
+    };
+
+    return Colour.fromSpectrum(avgSpectrum, integrationSampleCount, this.wavelengthLow, this.wavelengthHigh);
+    
+    // const result = Colour.fromSpectrum(avgSpectrum, integrationSampleCount, this.wavelengthLow, this.wavelengthHigh);
+    // const xyYResult = result.to('xyY');
+    // const Y = xyYResult.triplet.z * 10;
+    // const mappedY = Y / (Y + 1);
+    // xyYResult.triplet.z = mappedY;
+    // return xyYResult;
+    // const clampedY = result.to('xyY');
+    // clampedY.triplet.z = Math.min(clampedY.triplet.z * 2, 1);
+    // return clampedY;
+    // const result = new Colour(new Vec3(averagex, averagey, baseY), 'xyY');
+    // return result;
+    
   };
 }
