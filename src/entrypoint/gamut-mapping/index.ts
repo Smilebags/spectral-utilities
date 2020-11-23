@@ -22,9 +22,6 @@ const desaturationEl = document.querySelector('#desaturation') as HTMLInputEleme
 const modeEl = document.querySelector('#mode') as HTMLButtonElement;
 const sweepEl = document.querySelector('#sweep') as HTMLButtonElement;
 
-const abneySwatchEl = document.querySelector('#abneySwatchLobe') as HTMLDivElement;
-const gaussianSwatchEl = document.querySelector('#gaussianSwatchLobe') as HTMLDivElement;
-
 const canvasEl = document.querySelector('canvas')!;
 const canvasOutput = new CanvasOutput(canvasEl, CANVAS_SIZE, CANVAS_SIZE);
 
@@ -95,6 +92,7 @@ async function sweepHue() {
     render();
   }
 }
+
 async function sweepSaturation() {
   for (let i = 0; i < 50; i++) {
     await sleep(1);
@@ -103,7 +101,6 @@ async function sweepSaturation() {
     render();
   }
 }
-
 
 
 function render(clear = false) {
@@ -117,9 +114,6 @@ function render(clear = false) {
     renderSaturation();
     
   }
-  // if (state.mode === 'saturation') {
-  //   renderSaturation();
-  // }
   rendersRGB();
 }
 
@@ -171,32 +165,6 @@ function renderSaturation() {
   // fillSwatches(lobeDesaturationSamples);
 }
 
-function fillSwatches(lobeSamples: Colour[]) {
-  const clippedColour = lobeSamples[1].to('REC.709').normalise().clamp();
-  abneySwatchEl.style.backgroundColor = clippedColour.hex;
-
-  for (let i = 1; i < lobeSamples.length; i++) {
-    const sample = lobeSamples[i];
-    if (sample.to('REC.709').allPositive) {
-      console.log(sample.to('REC.709').normalise().hex);
-      gaussianSwatchEl.style.backgroundColor = sample.to('REC.709').normalise().hex;
-      break;
-    }
-  }
-
-  // const clippedPinkColour = pinkSamples[1].toRec709().normalise().clamp();
-  // abneySwatchPinkEl.style.backgroundColor = clippedPinkColour.hex;
-
-  // for (let i = 1; i < pinkSamples.length; i++) {
-  //   const sample = pinkSamples[i];
-  //   if (sample.toRec709().allPositive) {
-  //     console.log(sample.toRec709().normalise().hex);
-  //     gaussianSwatchPinkEl.style.backgroundColor = sample.toRec709().normalise().hex;
-  //     break;
-  //   }
-  // }
-}
-
 
 function createBoundaryValues(locusSampleCount: number) {
   const locusPoints = new Array(locusSampleCount)
@@ -239,16 +207,6 @@ function createBoundarySamples(locusSampleCount: number, pinkEdgeSampleCount: nu
   ];
 }
 
-function drawDot(point: Colour): void {
-  const xyYlocation = point.to('xyY');
-  const location = new Vec2(xyYlocation.triplet.x, xyYlocation.triplet.y).add(0.1);
-  canvasOutput.drawCircle({
-    radius: 0.05,
-    location,
-    color: point,
-  });
-}
-
 function drawPoints(points: Colour[]): void {
   points
     .map(point => {
@@ -258,12 +216,6 @@ function drawPoints(points: Colour[]): void {
         location: mappedLocation,
         colour: point,
       };
-      // const labLocation = point.to('lab');
-      // const mappedLocation = new Vec2(labLocation.triplet.y, labLocation.triplet.z).multiply(0.002).add(0.6);
-      // return {
-      //   location: mappedLocation,
-      //   colour: point,
-      // };
     })
     .forEach(({location, colour}, index, arr) => {
       if (index === 0) {
