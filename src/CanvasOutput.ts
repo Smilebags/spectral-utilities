@@ -49,6 +49,29 @@ export default class CanvasOutput {
 
     this.context.restore();
   }
+
+  drawRect(options: {location: Vec2, size: Vec2, color: Colour }): void {
+    const {
+      size, location, color
+    } = options;
+
+    this.context.save();
+
+    const scaledLocation = this.uvToCanvasCoordinates(location);
+    const scaledSize = this.uvToCanvasCoordinates(size);
+    const rgb = color.to(this.targetSpace).clamp();
+    this.context.fillStyle = rgb.hex;
+    
+    this.context.fillRect(
+      scaledLocation.x,
+      scaledLocation.y,
+      scaledSize.x,
+      scaledSize.y,
+    )
+
+    this.context.restore();
+  }
+  
   drawCircle(options: {radius: number, location: Vec2, color: Colour }): void {
     const {
       radius, location, color
