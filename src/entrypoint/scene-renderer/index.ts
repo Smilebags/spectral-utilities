@@ -8,7 +8,6 @@ import BasicScene from "../../Raytracing/BasicScene.js";
 import BasicAggregate from "../../Raytracing/BasicAggregate.js";
 import ShapePrimitive from "../../Raytracing/ShapePrimitive.js";
 import BasicShape from "../../Raytracing/BasicShape.js";
-
 const cameraPos = new Vec3(-0.8, 0, 0);
 const cameraDir = new Vec3(-0.4, 0, 1).normalise();
 const cameraUp = new Vec3(0, 1, 0);

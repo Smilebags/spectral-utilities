@@ -80,18 +80,15 @@ export default class BasicFilm implements Film {
   }
 
   updatePixel(index: number) {
-    // const binXYZs = this.bins[index]
-    //   .map(radiance => Colour
-    //     .fromWavelength(radiance.wavelength)
-    //     .multiply(radiance.intensity)
-    //   );
-    // const averageColour = Colour.fromAverage(binXYZs);
-    const averageColour = this.xyzBuffer[index];
+    const binXYZs = this.bins[index]
+      .map(radiance => Colour
+        .fromWavelength(radiance.wavelength)
+        .multiply(radiance.intensity)
+      );
+    const averageColour = Colour.fromAverage(binXYZs);
+    // const averageColour = this.xyzBuffer[index];
     const scaled = averageColour.multiply(this.exposure);
-    const rgb = scaled.to('REC.709');
-    this.output.setPixel(rgb, this.coordsFromIndex(index));
-    // if (redraw) {
-    //   this.output.redraw();
-    // }
+    this.output.setPixel(scaled, this.coordsFromIndex(index));
+    this.output.redraw();
   }
 }

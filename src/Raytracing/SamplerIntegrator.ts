@@ -17,6 +17,8 @@ export default class SamplerIntegrator {
   preprocess() {}
 
   async render(scene: Scene) {
+    console.log('rendering');
+    
     for (let sampleIndex = 0; sampleIndex < this.sampleCount; sampleIndex++) {
       for (let y = 0; y < this.height; y++) {
         for (let x = 0; x < this.width; x++) {

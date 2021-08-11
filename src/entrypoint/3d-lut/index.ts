@@ -1,9 +1,8 @@
 import Colour from "../../Colour/Colour.js";
 import { arrayAverage, mapValue, sleep } from "../../Util.js";
 import CanvasOutput from "../../CanvasOutput.js";
-import { Vec2, Vec3 } from "../../Vec.js";
+import { Vec2 } from "../../Vec.js";  
 import GaussianWideningStrategy from "../../DesaturationStrategy/GaussianWideningStrategy.js";
-import { GaussianSpectrum } from "../../Spectrum/GaussianSpectrum.js";
 import { Spectrum } from "../../types/index.js";
 
 const WAVELENGTH_LOW = 390;
