@@ -1,14 +1,13 @@
 import CanvasOutput from "../../CanvasOutput.js";
-import SamplerIntegrator from "../../SamplerIntegrator.js";
-import BasicCamera from "../../BasicCamera.js";
-import RandomSampler from "../../RandomSampler.js";
-import { Scene, Ray } from "../../types/index.js";
-import BasicFilm from "../../BasicFilm.js";
+import SamplerIntegrator from "../../Raytracing/SamplerIntegrator.js";
+import BasicCamera from "../../Raytracing/BasicCamera.js";
+import RandomSampler from "../../Raytracing/RandomSampler.js";
+import BasicFilm from "../../Raytracing/BasicFilm.js";
 import { Vec3 } from "../../Vec.js";
-import BasicScene from "../../BasicScene.js";
-import BasicAggregate from "../../BasicAggregate.js";
-import ShapePrimitive from "../../ShapePrimitive.js";
-import BasicShape from "../../BasicShape.js";
+import BasicScene from "../../Raytracing/BasicScene.js";
+import BasicAggregate from "../../Raytracing/BasicAggregate.js";
+import ShapePrimitive from "../../Raytracing/ShapePrimitive.js";
+import BasicShape from "../../Raytracing/BasicShape.js";
 
 const cameraPos = new Vec3(-0.8, 0, 0);
 const cameraDir = new Vec3(-0.4, 0, 1).normalise();

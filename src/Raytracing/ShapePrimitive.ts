@@ -1,7 +1,7 @@
-import { Primitive, SurfaceInteraction, Ray, Shape, Material } from "./types/index";
+import { Primitive, SurfaceInteraction, Ray, Hittable, Material } from "./Types";
 
 export default class ShapePrimitive implements Primitive {
-  constructor(private shape: Shape, material: Material) {}
+  constructor(private shape: Hittable, material: Material) {}
 
   intersect(ray: Ray): SurfaceInteraction | null {
     const distance = this.shape.intersect(ray);

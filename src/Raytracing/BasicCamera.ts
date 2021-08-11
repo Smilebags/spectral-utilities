@@ -1,6 +1,5 @@
-import { Camera, Ray, Film, Radiance } from "./types/index.js";
-import { Vec3, Vec2 } from "./Vec.js";
-import { CameraSample } from "./RandomSampler.js";
+import { Camera, Ray, Film, Radiance, CameraSample } from "./Types";
+import { Vec3, Vec2 } from "../Vec.js";
 
 export default class BasicCamera implements Camera {
   up: Vec3;

@@ -1,11 +1,6 @@
-import { Sampler } from "./types/index.js";
-import { Vec2 } from "./Vec.js";
-
-export interface CameraSample {
-  filmPos: Vec2;
-  time: number;
-  lensPos: Vec2;
-}
+import { CameraSample } from "./Types.js";
+import { Sampler } from "./Types";
+import { Vec2 } from "../Vec.js";
 
 export default class RandomSampler implements Sampler {
   currentPixel: Vec2 | null = null;

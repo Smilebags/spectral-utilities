@@ -1,13 +1,12 @@
-import { Film, Radiance } from "./types/index.js";
-import { Vec2, Vec3 } from "./Vec.js";
-import CanvasOutput from "./CanvasOutput.js";
-import { CameraSample } from "./RandomSampler.js";
-import Colour from "./Colour/Colour.js";
-import { mapValue } from "./Util.js";
+import { Film, Radiance, CameraSample } from "./Types";
+import { Vec2, Vec3 } from "../Vec.js";
+import CanvasOutput from "../CanvasOutput.js";
+import Colour from "../Colour/Colour.js";
+import { mapValue } from "../Util.js";
 
 export default class BasicFilm implements Film {
-  private bins: Radiance[][] = Array(this.output.width * this.output.height);
-  private xyzBuffer: Colour[] = Array(this.output.width * this.output.height)
+  private bins: Radiance[][];
+  private xyzBuffer: Colour[];
   private size: Vec2;
   private exposure = 1;
 
@@ -17,6 +16,8 @@ export default class BasicFilm implements Film {
     width: number = 100,
     height: number = 100,
   ) {
+    this.bins = Array(this.output.width * this.output.height);
+    this.xyzBuffer =  Array(this.output.width * this.output.height);
     this.size = new Vec2(width, height);
     const exposureEl = document.createElement('input');
     exposureEl.type = 'range';
@@ -87,8 +88,8 @@ export default class BasicFilm implements Film {
     // const averageColour = Colour.fromAverage(binXYZs);
     const averageColour = this.xyzBuffer[index];
     const scaled = averageColour.multiply(this.exposure);
-    const rgb = scaled.toRec709();
-    this.output.setPixel(rgb.triplet, this.coordsFromIndex(index));
+    const rgb = scaled.to('REC.709');
+    this.output.setPixel(rgb, this.coordsFromIndex(index));
     // if (redraw) {
     //   this.output.redraw();
     // }

@@ -1,9 +1,9 @@
-import { Ray, Shape } from "./types/index";
-import { Vec3 } from "./Vec";
+import { Ray, Hittable } from "./Types";
+import { Vec3 } from "../Vec";
 
 type Triangle = [Vec3, Vec3, Vec3];
 
-export default class BasicShape implements Shape {
+export default class BasicShape implements Hittable {
   constructor(
     private vertices: Vec3[],
     private faces: [number, number, number][],

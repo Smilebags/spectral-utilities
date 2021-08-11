@@ -1,7 +1,8 @@
-import { Camera, Scene, Ray, Spectrum, Radiance } from "./types/index.js";
+import { Spectrum } from "../types/index";
+import { Camera, Scene, Ray, Radiance } from "./Types";
 import RandomSampler from "./RandomSampler.js";
-import { lerp, nextFrame } from "./Util.js";
-import { Vec2 } from "./Vec.js";
+import { lerp, nextFrame } from "../Util.js";
+import { Vec2 } from "../Vec.js";
 
 // http://www.pbr-book.org/3ed-2018/Introduction/Class%20Relationships.svg
 export default class SamplerIntegrator {

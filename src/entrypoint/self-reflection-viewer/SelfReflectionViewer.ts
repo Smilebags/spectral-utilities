@@ -1,7 +1,9 @@
-import { Camera, Spectrum, Radiance } from "../../types/index.js";
+import { Spectrum } from "../../types/index.js";
+import { Radiance } from "../../Raytracing/Types";
+import { Camera } from "../../Raytracing/Types";
 import { lerp, nextFrame } from "../../Util.js";
 import { Vec2 } from "../../Vec.js";
-import { CameraSample } from "../../RandomSampler.js";
+import { CameraSample } from "../../Raytracing/Types";
 
 export default class SelfReflectionViewer {
   constructor(

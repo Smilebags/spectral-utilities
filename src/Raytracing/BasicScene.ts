@@ -1,4 +1,4 @@
-import { Scene, Ray, SurfaceInteraction, Primitive } from "./types/index";
+import { Scene, Ray, SurfaceInteraction, Primitive } from "./Types";
 
 export default class BasicScene implements Scene {
   constructor(private aggregate: Primitive) {}

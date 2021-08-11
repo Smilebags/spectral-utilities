@@ -1,6 +1,6 @@
 import CanvasOutput from "../../CanvasOutput.js";
-import BasicCamera from "../../BasicCamera.js";
-import BasicFilm from "../../BasicFilm.js";
+import BasicCamera from "../../Raytracing/BasicCamera.js";
+import BasicFilm from "../../Raytracing/BasicFilm.js";
 import { Vec3 } from "../../Vec.js";
 import SelfReflectionViewer from "./SelfReflectionViewer.js";
 import { Spectrum } from "../../types/index.js";
@@ -61,8 +61,8 @@ const colours = [
 
 
   const [d65spd, aspd] = await Promise.all([
-    fetch('/static/d65.spd').then(res => res.text()),
-    fetch('/static/a.spd').then(res => res.text()),
+    fetch('../../static/d65.spd').then(res => res.text()),
+    fetch('../../static/a.spd').then(res => res.text()),
   ]);
   const d65Illuminant = new SPDSpectrum(d65spd, 'zero', 2 ** -7);
   const aIlluminant = new SPDSpectrum(aspd, 'zero', 2 ** -8);

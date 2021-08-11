@@ -26,7 +26,7 @@ export function mapValue(
 }
 
 export function nextFrame() {
-  return new Promise((resolve) => {
+  return new Promise<void>((resolve) => {
     requestAnimationFrame(() => resolve());
   });
 }
