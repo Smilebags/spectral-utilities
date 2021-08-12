@@ -8,8 +8,9 @@
     "dev": "npx tsc --watch ",
     "serve": "cd dist && npx ws",
     "copy:html": "cd src/entrypoint && find . -name '*.html' -exec cp --parents '{}' ../../dist/entrypoint ';'",
+    "copy:markdown": "cd src/entrypoint && find . -name '*.md' -exec cp --parents '{}' ../../dist/entrypoint ';'",
     "copy:static": "cp -r src/static dist/static",
-    "deploy": "rm -rf dist && mkdir dist && npx tsc && npm run copy:html && npm run copy:static"
+    "deploy": "rm -rf dist && mkdir dist && npx tsc && npm run copy:html && npm run copy:markdown && npm run copy:static"
   },
   "author": "",
   "license": "ISC",
