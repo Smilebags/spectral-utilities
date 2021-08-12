@@ -1,3 +1,6 @@
+---
+title: Abney vs Gaussian Width
+---
 This entrypoint is used to compare the path to white from the outer edge of sRGB using two approaches:
 1. Widening of the gaussian lobe towards a flat spectrum
 2. Linear blending with white in a linear tristimulus space (which exhibits the Abney effect)

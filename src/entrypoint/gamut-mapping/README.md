@@ -1,3 +1,6 @@
+---
+title: Gamut Mapping
+---
 This entrypoint shows a CIE XY chart overlaid with the boundary of the sRGB gamut and an interactive diagram of the gaussian spectrum.
 
 Saturation mode shpws the path towards white when desaturating a wavelength by widening the gaussian spectrum centered around that wavelength.
