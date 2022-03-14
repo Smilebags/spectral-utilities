@@ -9,16 +9,26 @@ export default class CanvasOutput {
   private context: CanvasRenderingContext2D;
   private imageData: ImageData;
   constructor(
-    private canvasEl: HTMLCanvasElement,
+    canvasElOrContext: HTMLCanvasElement | CanvasRenderingContext2D,
     public width: number = 100,
     public height: number = 100,
     private clipOutOfGamut = false,
     private targetSpace: ColourSpaceName = 'sRGB',
     private background: Colour = BLACK,
   ) {
-    this.canvasEl.height = height;
-    this.canvasEl.width = width;
-    this.context = this.canvasEl.getContext('2d')!;
+    if (canvasElOrContext instanceof HTMLCanvasElement) {
+      canvasElOrContext.height = height;
+      canvasElOrContext.width = width;
+      // @ts-ignore
+      const options: CanvasRenderingContext2DSettings = {
+        // @ts-ignore
+        colorSpace: this.targetSpace === 'Display-P3' ? 'display-p3' : 'srgb',
+      };
+      // @ts-ignore
+      this.context = canvasElOrContext.getContext('2d', options)!;
+    } else {
+      this.context = canvasElOrContext;
+    }
     this.imageData = new ImageData(width, height);
     this.clear();
     // setInterval(() => this.redraw(), 50);
@@ -29,6 +39,7 @@ export default class CanvasOutput {
   }
 
   drawLine(options: {lineWidth: number, from: Vec2, to: Vec2, color: Colour }): void {
+    // console.log('drawLine');
     const {
       lineWidth, from, to, color
     } = options;
@@ -37,7 +48,8 @@ export default class CanvasOutput {
     this.context.lineWidth = lineWidth * this.width;
     this.context.lineCap = 'round';
     const rgb = color.to(this.targetSpace).clamp();
-    this.context.strokeStyle = rgb.hex;
+    // console.log(rgb.p3CssString);
+    this.context.strokeStyle = rgb.p3CssString;
 
     const canvasFrom = this.uvToCanvasCoordinates(from);
     const canvasTo = this.uvToCanvasCoordinates(to);
@@ -60,7 +72,8 @@ export default class CanvasOutput {
     const scaledLocation = this.uvToCanvasCoordinates(location);
     const scaledSize = this.uvToCanvasCoordinates(size);
     const rgb = color.to(this.targetSpace).clamp();
-    this.context.fillStyle = rgb.hex;
+    console.log(rgb.p3CssString);
+    this.context.fillStyle = rgb.p3CssString;
     
     this.context.fillRect(
       scaledLocation.x,
@@ -138,6 +151,10 @@ export default class CanvasOutput {
     this.imageData.data[offset + 1] = triplet.y * 255;
     this.imageData.data[offset + 2] = triplet.z * 255;
     this.imageData.data[offset + 3] = 255;
+  }
+
+  getImageData() {
+    return this.context.getImageData(0, 0, this.width, this.height);
   }
 
   redraw() {

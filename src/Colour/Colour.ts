@@ -170,6 +170,11 @@ export default class Colour {
     return sRGBColour.hex;
   }
 
+  get p3CssString(): string {
+    const p3 = this.to('Display-P3');
+    return `color(display-p3 ${p3.triplet.x} ${p3.triplet.y} ${p3.triplet.z})`
+  }
+
   clamp(): Colour {
     this.triplet.x = clamp(this.triplet.x, 0, 1);
     this.triplet.y = clamp(this.triplet.y, 0, 1);

@@ -9,14 +9,20 @@ const CLIP_OUT_OF_GAMUT = false;
 const WAVELENGTH_LOW = 420;
 const WAVELENGTH_HIGH = 670;
 const CANVAS_SIZE = 1000;
-const DISPLAY_SPACE: ColourSpaceName = 'sRGB';
+// const DISPLAY_SPACE: ColourSpaceName = 'sRGB';
+const DISPLAY_SPACE: ColourSpaceName = 'Display-P3';
 
 
 const canvasEl = document.querySelector('canvas#circle')! as HTMLCanvasElement;
-const circleCanvasOutput = new CanvasOutput(canvasEl, CANVAS_SIZE, CANVAS_SIZE, true, DISPLAY_SPACE);
+const options = { colorSpace: 'display-p3' };
+canvasEl.width = CANVAS_SIZE;
+canvasEl.height = CANVAS_SIZE;
+const p3Context = canvasEl.getContext('2d', options)! as CanvasRenderingContext2D;
+const circleCanvasOutput = new CanvasOutput(p3Context, CANVAS_SIZE, CANVAS_SIZE, true, DISPLAY_SPACE);
 
 const highQualityEl = document.querySelector('#high') as HTMLButtonElement;
 const lowQualityEl = document.querySelector('#low') as HTMLButtonElement;
+// const gamutEl = document.querySelector('#gamut') as HTMLButtonElement;
 
 lowQualityEl.addEventListener('click', () => {
   render();
@@ -24,8 +30,21 @@ lowQualityEl.addEventListener('click', () => {
 highQualityEl.addEventListener('click', () => {
   render(true);
 });
+// gamutEl.addEventListener('click', () => {
+//   fixGamut();
+// });
 
-render();
+// render();
+
+// function fixGamut() {
+//   const imgData = circleCanvasOutput.getImageData();
+//   console.log(imgData);
+  
+//   const p3ImgData = new ImageData(imgData.width, imgData.height);
+//   p3ImgData.data.set(imgData.data);
+//   console.log(p3ImgData);
+//   p3Context.putImageData(p3ImgData, 0, 0);
+// }
 
 async function render(highQuality = false) {
   const SATURATION_SAMPLES = highQuality ? 240 : 220;
@@ -38,6 +57,7 @@ async function render(highQuality = false) {
 }
 
 function drawRing(desaturation: number, highQuality: boolean) {
+  console.log('ring')
   const HUE_SAMPLES = highQuality ? 720 : 120;
   const SPECTRUM_SAMPLE_SHIFT = highQuality ? 2 : 0;
 
