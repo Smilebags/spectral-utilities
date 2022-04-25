@@ -19,16 +19,17 @@ function fromSrgbEotf(colour: Vec3) {
   );
 }
 
-const toD65: Matrix = [
-  [0.95314749, -0.02661093, 0.02391814],
-  [-0.03827288, 1.02885155, 0.00942132],
-  [0.00261508, -0.0030468, 1.08948201],
+
+const XYZtoLMS: Matrix = [
+  [0.8951, 0.2664, -0.1614],
+  [-0.7502, 1.7135, 0.0367],
+  [0.0389, -0.0685, 1.0296],
 ];
 
-const fromD65: Matrix = [
-  [1.05030753, 0.0270969, -0.02329244],
-  [0.03909312, 0.97294119, -0.00927177],
-  [-0.00241173, 0.00265585, 0.91789736],
+const LMStoXYZ: Matrix = [
+  [0.9869929, -0.1470543, 0.1599627],
+  [0.4323053, 0.5183603, 0.0492912],
+  [-0.0085287, 0.0400428, 0.9684867],
 ];
 
 const rec709 = new GenericColourSpace(
@@ -57,6 +58,12 @@ const rec2020 = new GenericColourSpace(
     [2.62698339e-01, 6.78008766e-01, 5.92928953e-02],
     [4.99407097e-17, 2.80731358e-02, 1.06082723e+00],
   ],
+);
+
+const LMS = new GenericColourSpace(
+  'LMS',
+  XYZtoLMS,
+  LMStoXYZ,
 );
 
 const dcip3 = new GenericColourSpace(
@@ -122,21 +129,6 @@ const XYZ = new GenericColourSpace(
     [0,0,1],
   ],
 );
-const XYZD65 = new GenericColourSpace(
-  'XYZD65',
-  [
-    [1,0,0],
-    [0,1,0],
-    [0,0,1],
-  ],
-  [
-    [1,0,0],
-    [0,1,0],
-    [0,0,1],
-  ],
-  toD65,
-  fromD65,
-);
 
 const lab: ColourSpace = {
   name: 'lab',
@@ -168,12 +160,12 @@ const lab: ColourSpace = {
 const spaces: ColourSpace[] = [
   sRGB,
   rec709,
-  xyY,
   rec2020,
   dcip3,
   displayP3,
   XYZ,
-  XYZD65,
+  xyY,
+  LMS,
   lab,
 ];
 export default new ColourSpaceProvider(spaces);

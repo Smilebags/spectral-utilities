@@ -10,23 +10,15 @@ export default class GenericColourSpace implements ColourSpace {
     public name: ColourSpaceName,
     private toMatrix: Matrix,
     private fromMatrix: Matrix,
-    private adaptationToMatrix?: Matrix,
-    private adaptationFromMatrix?: Matrix,
   ) {}
 
+  // converts from xyz to this colour space
   to(colour: Vec3) {
-    if (!this.adaptationToMatrix) {
-      return Vec3.fromArray(matrixMultiply(this.toMatrix, colour.toArray()));
-    }
-    const adapted = matrixMultiply(this.adaptationToMatrix, colour.toArray())
-    return Vec3.fromArray(matrixMultiply(this.toMatrix, adapted));
+    return Vec3.fromArray(matrixMultiply(this.toMatrix, colour.toArray()));
   }
 
+  // converts from this colour space to xyz
   from(colour: Vec3) {
-    if (!this.adaptationFromMatrix) {
-      return Vec3.fromArray(matrixMultiply(this.fromMatrix, colour.toArray()));
-    }
-    const adapted = matrixMultiply(this.adaptationFromMatrix, colour.toArray())
-    return Vec3.fromArray(matrixMultiply(this.fromMatrix, adapted));
+    return Vec3.fromArray(matrixMultiply(this.fromMatrix, colour.toArray()));
   }
 }

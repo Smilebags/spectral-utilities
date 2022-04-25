@@ -11,14 +11,14 @@ export interface DesaturationStrategy {
 }
 
 export type ColourSpaceName =
-  'REC.709' |
   'XYZ' |
-  'XYZD65' |
   'xyY' |
-  'sRGB' |
-  'REC.2020' |
-  'DCI-P3' |
+  'LMS' |
   'lab' |
+  'REC.2020' |
+  'REC.709' |
+  'sRGB' |
+  'DCI-P3' |
   'Display-P3';
 
 export interface ColourSpace {
