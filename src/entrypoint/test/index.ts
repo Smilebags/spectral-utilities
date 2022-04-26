@@ -21,31 +21,31 @@ test(`White XYZ to xyY`, () => {
   expect(destination.triplet.z).toBeCloseTo(1);
 });
 
-test(`White XYZ to XYZD65`, () => {
-  const base = new Colour(new Vec3(1, 1, 1), 'XYZ');
-  const destination = base.to('XYZD65');
-  expect(destination.triplet.x).toBeCloseTo(0.9504547, 6);
-  expect(destination.triplet.y).toBeCloseTo(1, 7);
-  expect(destination.triplet.z).toBeCloseTo(1.08905, 6);
-});
+// test(`White XYZ to XYZD65`, () => {
+//   const base = new Colour(new Vec3(1, 1, 1), 'XYZ');
+//   const destination = base.to('XYZD65');
+//   expect(destination.triplet.x).toBeCloseTo(0.9504547, 6);
+//   expect(destination.triplet.y).toBeCloseTo(1, 7);
+//   expect(destination.triplet.z).toBeCloseTo(1.08905, 6);
+// });
 
-test(`XYZD65 round trip`, () => {
-  const base = new Colour(new Vec3(1, 1, 1), 'XYZ');
-  const destination = base.to('XYZD65').to('XYZ');
-  expect(destination.triplet.x).toBeCloseTo(1);
-  expect(destination.triplet.y).toBeCloseTo(1);
-  expect(destination.triplet.z).toBeCloseTo(1);
-});
+// test(`XYZD65 round trip`, () => {
+//   const base = new Colour(new Vec3(1, 1, 1), 'XYZ');
+//   const destination = base.to('XYZD65').to('XYZ');
+//   expect(destination.triplet.x).toBeCloseTo(1);
+//   expect(destination.triplet.y).toBeCloseTo(1);
+//   expect(destination.triplet.z).toBeCloseTo(1);
+// });
 
-test(`White XYZ to REC.709`, () => {
-  const base = new Colour(new Vec3(1, 1, 1), 'XYZ');
-  const adapted = base.to('XYZD65');
-  adapted.colourSpace = 'XYZ';
-  const destination = adapted.to('REC.709');
-  expect(destination.triplet.x).toBeCloseTo(1, 3);
-  expect(destination.triplet.y).toBeCloseTo(1, 3);
-  expect(destination.triplet.y).toBeCloseTo(1, 3);
-});
+// test(`White XYZ to REC.709`, () => {
+//   const base = new Colour(new Vec3(1, 1, 1), 'XYZ');
+//   const adapted = base.to('XYZD65');
+//   adapted.colourSpace = 'XYZ';
+//   const destination = adapted.to('REC.709');
+//   expect(destination.triplet.x).toBeCloseTo(1, 3);
+//   expect(destination.triplet.y).toBeCloseTo(1, 3);
+//   expect(destination.triplet.y).toBeCloseTo(1, 3);
+// });
 
 
 const rec709ToxyYTestCases: [string, Vec3, Vec3][] = [
@@ -85,7 +85,6 @@ rec709TosRGBTestCases.forEach(([colourName, sourceTriplet, expectedTriplet]) => 
 
 const colourSpaces: ColourSpaceName[] = [
   'XYZ',
-  'XYZD65',
   'sRGB',
   'REC.709',
   'xyY',

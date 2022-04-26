@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx tsc --watch ",
-    "serve": "cd dist && npx ws",
+    "serve": "cd dist && npx ws -p 8001",
     "copy:html": "cd src/entrypoint && find . -name '*.html' -exec cp --parents '{}' ../../dist/entrypoint ';'",
     "copy:markdown": "cd src/entrypoint && find . -name '*.md' -exec cp --parents '{}' ../../dist/entrypoint ';'",
     "copy:static": "cp -r src/static dist/static",

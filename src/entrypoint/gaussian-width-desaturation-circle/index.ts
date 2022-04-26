@@ -51,7 +51,8 @@ function drawRing(desaturation: number, highQuality: boolean) {
       desaturation,
       spectrumSampleCount,
     );
-    const adaptedColour = colour.to('XYZD65');
+    // TODO: Use ChromaticAdaptation
+    const adaptedColour = colour.to('XYZ');
     adaptedColour.colourSpace = 'XYZ';
     const toneCompressedColour = adaptedColour.to('xyY');
     toneCompressedColour.triplet.z = reinhard(toneCompressedColour.triplet.z * 8);

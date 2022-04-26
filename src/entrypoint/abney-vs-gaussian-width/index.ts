@@ -48,7 +48,8 @@ function renderSwatches(wavelength: number) {
   let startWidth = 0.016;
   const startSearchStep = 0.003;
   while(true) {
-    const colour = gaussianWideningStrategy.desaturate(wavelength, startWidth, 2 ** 7).to('XYZD65');
+    // TODO: Use ChromaticAdaptation
+    const colour = gaussianWideningStrategy.desaturate(wavelength, startWidth, 2 ** 7).to('XYZ');
     colour.colourSpace = 'XYZ';
     if (colour.to(WORKING_SPACE).allPositive) {
       break;
@@ -70,7 +71,8 @@ function renderCurveSwatches(wavelength: number, startWidth: number, canvasOutpu
     const mapped = mapValue(swatchIndex, 0, STEP_COUNT - 1, 0, 1);
     const curveApplied = mapped ** 1.2;
     const desaturation = mapValue(curveApplied, 0, 1, startWidth, 0.8);
-    const colour = gaussianWideningStrategy.desaturate(wavelength, desaturation, 2 ** 7).to('XYZD65');
+    // TODO: Use ChromaticAdaptation
+    const colour = gaussianWideningStrategy.desaturate(wavelength, desaturation, 2 ** 7).to('XYZ');
     colour.colourSpace = 'XYZ';
     for (let y = 0; y < SWATCH_SIZE; y++) {
       for (let x = 0; x < SWATCH_SIZE; x++) {
@@ -85,7 +87,8 @@ function renderCurveSwatches(wavelength: number, startWidth: number, canvasOutpu
 
 function renderAbneySwatches(colour: Colour, canvasOutput: CanvasOutput) {
   const destinationColour = new Colour(new Vec3(1,1,1), 'sRGB');
-  let startColour = colour.to('XYZD65');
+  // TODO: Use ChromaticAdaptation
+  let startColour = colour.to('XYZ');
   startColour.colourSpace = 'XYZ';
   startColour = startColour.to('REC.709').normalise().to('sRGB');
   for (let swatchIndex = 0; swatchIndex < STEP_COUNT; swatchIndex++) {
