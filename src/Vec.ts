@@ -60,6 +60,16 @@ export class Vec3 {
     public y: number,
     public z: number,
   ) {}
+
+  get [0](): number {
+    return this.x;
+  }
+  get [1]() {
+    return this.y;
+  }
+  get [2]() {
+    return this.z;
+  }
   
   static fromArray(numbers: [number, number, number]): Vec3 {
     return new Vec3(...numbers);

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Spectrum colour viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./index.js" type="module"></script>
+    <style>
+        input {
+            width: 100%;
+        }
+
+        canvas {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Colour blindness simulation</h1>
+    L sensitivity shift (+- 80)
+    <input type="range" min="-80" max="80" step="1" id="l" />
+    M sensitivity shift (+- 80)
+    <input type="range" min="-80" max="80" step="1" id="m" />
+    S sensitivity shift (+- 80)
+    <input type="range" min="-80" max="80" step="1" id="s" />
+    <canvas id="colour" width="2800" height="800"></canvas>
+    <button id="reset">Reset</button>
+    <h2>Deuteranomaly (common, ~8% of males)</h2>
+    <button id="deuteranomaly">Apply</button>
+    <p>M is shifted towards L (positive). Reds and greens get harder to distinguish.</p>
+    <h2>Protanomaly (rare, ~1% of males)</h2>
+    <button id="protanomaly">Apply</button>
+    <p>L is shifted towards M (negative). Reds become darker, and reds and greens get harder to distinguish.</p>
+</body>
+
+</html>
