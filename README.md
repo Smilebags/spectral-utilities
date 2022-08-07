@@ -5,6 +5,7 @@ Entrypoints are the user-exposed applications which consume the core technology 
 
 ## Entrypoints
 Here is a table of the current entrypoints in the repository.
+- [Colour Blindness](./dist/entrypoint/colour-blindness/README.html) - [Live Demo](./dist/entrypoint/colour-blindness/)
 - [3D LUT](./dist/entrypoint/3d-lut/README.html) - [Live Demo](./dist/entrypoint/3d-lut/)
 - [Abney vs Gaussian Width](./dist/entrypoint/abney-vs-gaussian-width/README.html) - [Live Demo](./dist/entrypoint/abney-vs-gaussian-width/)
 - [Gamut Mapping](./dist/entrypoint/gamut-mapping/README.html) - [Live Demo](./dist/entrypoint/gamut-mapping/)
