@@ -1,0 +1,114 @@
+import { Vec3 } from "../Vec.js";
+import ColourConverter from "./ColourConverter.js";
+import { clamp, lerp, mapValue } from "../Util.js";
+import colourSpaceProviderSingleton from "./ColourSpaceProviderSingleton.js";
+export default class Colour {
+    constructor(triplet, colourSpace = 'REC.709', colourSpaceProvider = colourSpaceProviderSingleton) {
+        this.triplet = triplet;
+        this.colourSpace = colourSpace;
+        this.colourSpaceProvider = colourSpaceProvider;
+    }
+    static fromSpectrum(spectrum, resolution = 2 ** 7, low = 400, high = 780) {
+        const samples = new Array(resolution).fill(null).map((item, index) => {
+            const wavelength = mapValue(index, 0, resolution - 1, low, high);
+            const intensity = spectrum.sample(wavelength);
+            return Colour.fromWavelength(wavelength).multiply(intensity);
+        });
+        return Colour.fromAverage(samples);
+    }
+    static fromWavelength(wavelength) {
+        const triplet = ColourConverter.tripletFromWavelength(wavelength);
+        return new Colour(triplet, 'XYZ', colourSpaceProviderSingleton);
+    }
+    static fromAverage(colours) {
+        const totalX = colours
+            .map(colour => colour.triplet.x)
+            .reduce((total, current) => total + current, 0);
+        const totalY = colours
+            .map(colour => colour.triplet.y)
+            .reduce((total, current) => total + current, 0);
+        const totalZ = colours
+            .map(colour => colour.triplet.z)
+            .reduce((total, current) => total + current, 0);
+        if (!totalX && !totalY && !totalZ) {
+            return new Colour(new Vec3(0, 0, 0), colours[0].colourSpace, colourSpaceProviderSingleton);
+        }
+        return new Colour(new Vec3(totalX / colours.length, totalY / colours.length, totalZ / colours.length), colours[0].colourSpace, colourSpaceProviderSingleton);
+    }
+    multiply(colour) {
+        if (typeof colour === 'number') {
+            return new Colour(new Vec3(this.triplet.x * colour, this.triplet.y * colour, this.triplet.z * colour), this.colourSpace, this.colourSpaceProvider);
+        }
+        return new Colour(new Vec3(this.triplet.x * colour.triplet.x, this.triplet.y * colour.triplet.y, this.triplet.z * colour.triplet.z), this.colourSpace, this.colourSpaceProvider);
+    }
+    divide(colour) {
+        if (typeof colour === 'number') {
+            return this.multiply(1 / colour);
+        }
+        return this.multiply(new Colour(new Vec3(1 / colour.triplet.x, 1 / colour.triplet.y, 1 / colour.triplet.z), colour.colourSpace, this.colourSpaceProvider));
+    }
+    add(colour) {
+        return new Colour(new Vec3(this.triplet.x + colour.triplet.x, this.triplet.y + colour.triplet.y, this.triplet.z + colour.triplet.z), this.colourSpace, this.colourSpaceProvider);
+    }
+    lerp(colour, mix) {
+        if (this.colourSpace !== colour.colourSpace) {
+            throw 'Colour spaces must match';
+        }
+        return new Colour(new Vec3(lerp(this.triplet.x, colour.triplet.x, mix), lerp(this.triplet.y, colour.triplet.y, mix), lerp(this.triplet.z, colour.triplet.z, mix)), this.colourSpace, this.colourSpaceProvider);
+    }
+    normalise() {
+        const max = this.max;
+        const triplet = new Vec3(this.triplet.x / max, this.triplet.y / max, this.triplet.z / max);
+        return new Colour(triplet, this.colourSpace, this.colourSpaceProvider);
+    }
+    get max() {
+        return Math.max(this.triplet.x, this.triplet.y, this.triplet.z);
+    }
+    get sum() {
+        return this.triplet.x + this.triplet.y + this.triplet.z;
+    }
+    get allPositive() {
+        return this.triplet.x >= 0 && this.triplet.y >= 0 && this.triplet.z >= 0;
+    }
+    to(colourSpace) {
+        if (this.colourSpace === colourSpace) {
+            return this;
+        }
+        const space = this.colourSpaceProvider.get(colourSpace);
+        if (this.colourSpace === 'XYZ') {
+            const triplet = space.to(this.triplet);
+            return new Colour(triplet, colourSpace, this.colourSpaceProvider);
+        }
+        const xyz = this.toXYZ();
+        const triplet = space.to(xyz.triplet);
+        return new Colour(triplet, colourSpace, this.colourSpaceProvider);
+    }
+    toXYZ() {
+        if (this.colourSpace === 'XYZ') {
+            return this;
+        }
+        const space = this.colourSpaceProvider.get(this.colourSpace);
+        const triplet = space.from(this.triplet);
+        return new Colour(triplet, 'XYZ', this.colourSpaceProvider);
+    }
+    get hex() {
+        const r = Math.round(clamp(this.triplet.x, 0, 1) * 255);
+        const g = Math.round(clamp(this.triplet.y, 0, 1) * 255);
+        const b = Math.round(clamp(this.triplet.z, 0, 1) * 255);
+        return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+    }
+    get sRGBHex() {
+        const sRGBColour = this.to('sRGB');
+        return sRGBColour.hex;
+    }
+    get cssP3ColorString() {
+        const p3Colour = this.to('Display-P3');
+        return `color(display-p3 ${p3Colour.triplet.x} ${p3Colour.triplet.y} ${p3Colour.triplet.z})`;
+    }
+    clamp() {
+        this.triplet.x = clamp(this.triplet.x, 0, 1);
+        this.triplet.y = clamp(this.triplet.y, 0, 1);
+        this.triplet.z = clamp(this.triplet.z, 0, 1);
+        return this;
+    }
+}

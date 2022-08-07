@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Quadratic sigmoid</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="index.js" type="module"></script>
+    <style>
+        input {
+            width: 1000px;
+        }
+    </style>
+</head>
+<body>
+    <p>https://rgl.s3.eu-central-1.amazonaws.com/media/papers/Jakob2019Spectral_3.pdf</p>
+    <input type="range" name="mid" id="mid" min="390" max="830" step="0.1" value="500">
+    <input type="range" name="width" id="width" min="1" max="500" step="0.1" value="50">
+    <input type="range" name="sharpness" id="sharpness" min="-1" max="1" step="0.001" value="0.1">
+    <canvas></canvas>
+</body>
+</html>
