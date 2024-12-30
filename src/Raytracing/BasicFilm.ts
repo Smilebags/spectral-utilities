@@ -3,6 +3,10 @@ import { Vec2, Vec3 } from "../Vec.js";
 import CanvasOutput from "../CanvasOutput.js";
 import Colour from "../Colour/Colour.js";
 import { mapValue } from "../Util.js";
+import { ChromaticAdaptation } from "../Colour/ChromaticAdaptation.js";
+
+const ieWhite = Colour.fromSpectrum({ sample: () => 1 });
+const sRGBWhite = new Colour(new Vec3(1, 1, 1), 'sRGB');
 
 export default class BasicFilm implements Film {
   private bins: Radiance[][];
@@ -88,7 +92,8 @@ export default class BasicFilm implements Film {
     const averageColour = Colour.fromAverage(binXYZs);
     // const averageColour = this.xyzBuffer[index];
     const scaled = averageColour.multiply(this.exposure);
-    this.output.setPixel(scaled, this.coordsFromIndex(index));
+    const adapted = new ChromaticAdaptation().adapt(scaled, ieWhite, sRGBWhite);
+    this.output.setPixel(adapted, this.coordsFromIndex(index));
     this.output.redraw();
   }
 }
