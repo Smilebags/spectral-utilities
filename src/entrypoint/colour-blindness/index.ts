@@ -7,6 +7,8 @@ import { Spectrum } from "../../Spectrum/Spectrum.js";
 import { createCustomLMSColourConverter } from "./ColourFromSpectrumCustomLMS.js";
 import { createColourBlindnessLMSSpectra } from "./createColourBlindnessLMSSpectra.js";
 import { sRGBToIntensityLookups } from "./sRGBToIntensityLookups.js";
+import { GaussianSpectrum } from "../../Spectrum/GaussianSpectrum.js";
+import { mapValue } from "../../Util.js";
 
 const WAVELENGTH_LOW = 380;
 const WAVELENGTH_HIGH = 730;
@@ -100,36 +102,45 @@ function render(
 ) {
   drawSpectrumToRegion(
     new SrgbSpectrum(sRGBToIntensityLookups, 1, 0, 0),
-    { x: 0, y: 0, width: 0.25, height: 0.5 },
+    { x: 0, y: 0, width: 0.25, height: 0.4 },
   );
   drawSpectrumToRegion(
     new SrgbSpectrum(sRGBToIntensityLookups, 0, 1, 0),
-    { x: 0.25, y: 0, width: 0.25, height: 0.5 },
+    { x: 0.25, y: 0, width: 0.25, height: 0.4 },
   );
   drawSpectrumToRegion(
     new SrgbSpectrum(sRGBToIntensityLookups, 0, 0, 1),
-    { x: 0.5, y: 0, width: 0.25, height: 0.5 },
+    { x: 0.5, y: 0, width: 0.25, height: 0.4 },
   );
   drawSpectrumToRegion(
     new SrgbSpectrum(sRGBToIntensityLookups, 1, 1, 1),
-    { x: 0.75, y: 0, width: 0.25, height: 0.5 },
+    { x: 0.75, y: 0, width: 0.25, height: 0.4 },
   );
   drawSpectrumToRegion(
     new SrgbSpectrum(sRGBToIntensityLookups, 0, 1, 1),
-    { x: 0, y: 0.5, width: 0.25, height: 0.5 },
+    { x: 0, y: 0.4, width: 0.25, height: 0.4 },
   );
   drawSpectrumToRegion(
     new SrgbSpectrum(sRGBToIntensityLookups, 1, 0, 1),
-    { x: 0.25, y: 0.5, width: 0.25, height: 0.5 },
+    { x: 0.25, y: 0.4, width: 0.25, height: 0.4 },
   );
   drawSpectrumToRegion(
     new SrgbSpectrum(sRGBToIntensityLookups, 1, 1, 0),
-    { x: 0.5, y: 0.5, width: 0.25, height: 0.5 },
+    { x: 0.5, y: 0.4, width: 0.25, height: 0.4 },
   );
   drawSpectrumToRegion(
     new SrgbSpectrum(sRGBToIntensityLookups, 0, 0, 0),
-    { x: 0.75, y: 0.5, width: 0.25, height: 0.5 },
+    { x: 0.75, y: 0.4, width: 0.25, height: 0.4 },
   );
+  for (let i = 0; i < 200; i++) {
+    let progress = i / 200;
+    drawSpectrumToRegion(
+      new GaussianSpectrum(mapValue(progress, 0, 1, 360, 780), 20, 1),
+      { x: progress, y: 0.8, width: 1/200, height: 0.2 },
+    );
+    
+    
+  }
 
   function drawSpectrumToRegion(spectrum: Spectrum, region: Region) {
     const colour = humanObserver(spectrum).to('REC.709').multiply(0.05);
