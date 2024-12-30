@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx tsc --watch ",
+    "build": "tsc",
+    "dev": "tsc --watch",
     "serve": "cd dist && npx ws -p 8001",
     "copy:html": "cd src/entrypoint && find . -name '*.html' -exec cp --parents '{}' ../../dist/entrypoint ';'",
     "copy:markdown": "cd src/entrypoint && find . -name '*.md' -exec cp --parents '{}' ../../dist/entrypoint ';'",
@@ -17,6 +18,6 @@
   "license": "ISC",
   "devDependencies": {
     "local-web-server": "^3.0.7",
-    "typescript": "^4.2.4"
+    "typescript": "^4.9.5"
   }
 }
