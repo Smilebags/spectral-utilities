@@ -1,4 +1,4 @@
-import { Ray, Hittable } from "./Types";
+import { Ray, Hittable } from "./Types.js";
 import { Vec3 } from "../Vec";
 
 type Triangle = [Vec3, Vec3, Vec3];

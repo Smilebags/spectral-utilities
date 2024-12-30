@@ -1,5 +1,5 @@
 import Colour from "../../Colour/Colour.js";
-import { Spectrum } from "../../types/index.js";
+import { Spectrum } from "../../Spectrum/Spectrum.js";
 import { lerp, mapValue } from "../../Util.js";
 import { Vec3 } from "../../Vec.js";
 

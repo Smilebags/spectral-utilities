@@ -1,4 +1,4 @@
-import { Spectrum } from "../types/index";
+import { Spectrum } from "./Spectrum";
 import { mapValue, lerp } from "../Util.js";
 
 

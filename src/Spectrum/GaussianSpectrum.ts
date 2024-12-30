@@ -1,4 +1,4 @@
-import { Spectrum } from "../types/index.js";
+import { Spectrum } from "./Spectrum.js";
 import parabolic from "./Parabolic.js";
 
 function generateGaussianFunction(height: number, center: number, width: number) {

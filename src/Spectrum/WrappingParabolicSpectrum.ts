@@ -1,4 +1,4 @@
-import { Spectrum } from "../types/index.js";
+import { Spectrum } from "./Spectrum.js";
 import parabolic from "./Parabolic.js";
 
 export class WrappingParabolicSpectrum implements Spectrum {

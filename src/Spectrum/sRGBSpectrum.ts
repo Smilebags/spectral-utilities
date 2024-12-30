@@ -1,4 +1,4 @@
-import { Spectrum } from "../types/index.js";
+import { Spectrum } from "./Spectrum.js";
 // import { lerp } from "../Util.js";
 
 const WAVELENGTH_LOW = 380;

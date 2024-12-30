@@ -3,7 +3,7 @@ import { lerp, mapValue, sleep } from "../../Util.js";
 import CanvasOutput from "../../CanvasOutput.js";
 import { Vec2, Vec3 } from "../../Vec.js";
 import GaussianWideningStrategy from "../../DesaturationStrategy/GaussianWideningStrategy.js";
-import { ColourSpaceName } from "../../types/index.js";
+import { ColourSpaceName } from "../../Colour/ColourSpace.js";
 
 
 

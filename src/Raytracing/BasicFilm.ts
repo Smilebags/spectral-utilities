@@ -1,4 +1,4 @@
-import { Film, Radiance, CameraSample } from "./Types";
+import { Film, Radiance, CameraSample } from "./Types.js";
 import { Vec2, Vec3 } from "../Vec.js";
 import CanvasOutput from "../CanvasOutput.js";
 import Colour from "../Colour/Colour.js";

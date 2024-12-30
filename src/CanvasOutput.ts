@@ -1,6 +1,6 @@
 import { Vec3, Vec2 } from "./Vec.js";
 import Colour from "./Colour/Colour.js";
-import { ColourSpaceName } from "./types/index.js";
+import { ColourSpaceName } from "./Colour/ColourSpace.js";
 
 const GREY = new Colour(new Vec3(0.5,0.5,0.5),'XYZ');
 const BLACK = new Colour(new Vec3(0.1,0.1,0.1),'XYZ');

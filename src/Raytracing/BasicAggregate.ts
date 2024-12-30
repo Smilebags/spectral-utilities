@@ -1,4 +1,4 @@
-import { Primitive, SurfaceInteraction, Ray } from "./Types";
+import { Primitive, SurfaceInteraction, Ray } from "./Types.js";
 
 export default class BasicAggregate implements Primitive {
   constructor(private primitives: Primitive[]) {}

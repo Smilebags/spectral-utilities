@@ -1,5 +1,5 @@
 import { wavelengthLMSLookup } from "../../Colour/wavelengthToLMSLookup.js";
-import { Spectrum } from "../../types/index.js";
+import { Spectrum } from "../../Spectrum/Spectrum.js";
 import { lerp } from "../../Util.js";
 import { LMSLookup } from "./ColourFromSpectrumCustomLMS.js";
 

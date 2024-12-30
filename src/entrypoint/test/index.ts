@@ -1,5 +1,5 @@
 import Colour from "../../Colour/Colour.js";
-import { ColourSpaceName } from "../../types/index.js";
+import { ColourSpaceName } from "../../Colour/ColourSpace.js";
 import { Vec3 } from "../../Vec.js";
 
 import { test, expect } from './test.js';

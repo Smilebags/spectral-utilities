@@ -1,16 +1,18 @@
-import { DesaturationStrategy, Spectrum } from "../types/index.js";
+import { DesaturationStrategy } from "./DesaturationStrategy.js";
+import { Spectrum } from "../Spectrum/Spectrum.js";
 import { GaussianSpectrum } from "../Spectrum/GaussianSpectrum.js";
 import Colour from "../Colour/Colour.js";
 import { arrayAverage, arraySum } from "../Util.js";
-import { Vec3 } from "../Vec.js";
-
 
 export default class GaussianWideningStrategy implements DesaturationStrategy {
-  private wavelengthRange = this.wavelengthHigh - this.wavelengthLow;
+  private wavelengthRange: number;
   constructor(
     private wavelengthLow: number,
     private wavelengthHigh: number,
-  ) {}
+  ) {
+    this.wavelengthRange = this.wavelengthHigh - this.wavelengthLow;
+
+  }
 
   private getWidthFromDesaturation(desaturation: number): number {
     if (desaturation <= 0) {

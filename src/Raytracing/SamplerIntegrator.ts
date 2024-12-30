@@ -1,5 +1,5 @@
-import { Spectrum } from "../types/index";
-import { Camera, Scene, Ray, Radiance } from "./Types";
+import { Spectrum } from "../Spectrum/Spectrum";
+import { Camera, Scene, Ray, Radiance } from "./Types.js";
 import RandomSampler from "./RandomSampler.js";
 import { lerp, nextFrame } from "../Util.js";
 import { Vec2 } from "../Vec.js";

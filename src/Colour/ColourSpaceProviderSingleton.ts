@@ -1,7 +1,7 @@
-import GenericColourSpace, { Matrix } from "./ColourSpace.js";
+import { GenericColourSpace } from "./GenericColourSpace.js";
+import { Matrix, ColourSpace } from "./ColourSpace.js";
 import { ColourSpaceProvider } from "./ColourSpaceProvider.js";
-import { ColourSpace } from "../types/index.js";
-import { clamp } from "../Util.js";
+import { } from "./ColourSpace.js";
 import { Vec3 } from "../Vec.js";
 
 function toSrgbEotf(colour: Vec3) {

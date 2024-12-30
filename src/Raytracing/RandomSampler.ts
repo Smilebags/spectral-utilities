@@ -1,5 +1,5 @@
 import { CameraSample } from "./Types.js";
-import { Sampler } from "./Types";
+import { Sampler } from "./Types.js";
 import { Vec2 } from "../Vec.js";
 
 export default class RandomSampler implements Sampler {

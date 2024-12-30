@@ -1,8 +1,8 @@
 import { Vec3 } from "../Vec.js";
-
 import ColourConverter from "./ColourConverter.js";
 import { clamp, lerp, mapValue } from "../Util.js";
-import { ColourSpaceName, Spectrum } from "../types/index.js";
+import { ColourSpaceName } from "./ColourSpace.js";
+import { Spectrum } from "../Spectrum/Spectrum.js";
 import { ColourSpaceProvider } from "./ColourSpaceProvider";
 import colourSpaceProviderSingleton from "./ColourSpaceProviderSingleton.js";
 

@@ -3,7 +3,7 @@ import BasicCamera from "../../Raytracing/BasicCamera.js";
 import BasicFilm from "../../Raytracing/BasicFilm.js";
 import { Vec3 } from "../../Vec.js";
 import SelfReflectionViewer from "./SelfReflectionViewer.js";
-import { Spectrum } from "../../types/index.js";
+import { Spectrum } from "../../Spectrum/Spectrum.js";
 import { mapValue } from "../../Util.js";
 import parabolic from "../../Spectrum/Parabolic.js";
 import SPDSpectrum from "../../Spectrum/SPDSpectrum.js";

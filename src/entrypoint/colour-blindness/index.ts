@@ -3,7 +3,7 @@
 // import { NormalisedCoefficientSpectrum } from "../../Spectrum/CoefficientSpectrum.js";
 import Colour from "../../Colour/Colour.js";
 import { SrgbSpectrum } from "../../Spectrum/sRGBSpectrum.js";
-import { Spectrum } from "../../types/index.js";
+import { Spectrum } from "../../Spectrum/Spectrum.js";
 import { createCustomLMSColourConverter } from "./ColourFromSpectrumCustomLMS.js";
 import { createColourBlindnessLMSSpectra } from "./createColourBlindnessLMSSpectra.js";
 import { sRGBToIntensityLookups } from "./sRGBToIntensityLookups.js";

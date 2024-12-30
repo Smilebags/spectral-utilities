@@ -3,7 +3,7 @@ import { arrayAverage, mapValue, sleep } from "../../Util.js";
 import CanvasOutput from "../../CanvasOutput.js";
 import { Vec2 } from "../../Vec.js";  
 import GaussianWideningStrategy from "../../DesaturationStrategy/GaussianWideningStrategy.js";
-import { Spectrum } from "../../types/index.js";
+import { Spectrum } from "../../Spectrum/Spectrum.js";
 
 const WAVELENGTH_LOW = 390;
 const WAVELENGTH_HIGH = 830;

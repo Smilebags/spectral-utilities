@@ -1,4 +1,4 @@
-import { Spectrum } from "../types/index";
+import { Spectrum } from "./Spectrum";
 import { mapValue } from "../Util.js";
 
 export default class CoefficientSpectrum implements Spectrum {

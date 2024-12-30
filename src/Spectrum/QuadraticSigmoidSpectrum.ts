@@ -1,4 +1,4 @@
-import { Spectrum } from "../types/index";
+import { Spectrum } from "./Spectrum";
 
 export default class QuadraticSigmoidSpectrum implements Spectrum {
   constructor(
