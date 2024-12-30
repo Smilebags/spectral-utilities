@@ -20,20 +20,47 @@
 
 <body>
     <h1>Colour blindness simulation</h1>
-    L sensitivity shift (+- 80)
-    <input type="range" min="-80" max="80" step="1" id="l" />
-    M sensitivity shift (+- 80)
-    <input type="range" min="-80" max="80" step="1" id="m" />
-    S sensitivity shift (+- 80)
-    <input type="range" min="-80" max="80" step="1" id="s" />
+    <a href="https://eyewiki.org/Color_Vision">EyeWiki further reading</a>
+    <p>
+        Anomalous Trichromatism
+        <ul>
+            <li>Protanomaly (1% of males)</li>
+            <li>Deuteranomaly (5% of males)</li>
+            <li>Tritanomaly (0.0001% of males)</li>
+        </ul>
+        Dichromatism
+        <ul>
+            <li>Protanopia (1% of males)</li>
+            <li>Deuteranopia (1% of males)</li>
+            <li>Tritanopia (0.001% of males)</li>
+        </ul>
+    The prefixes “protan”, “deutan”, and “tritan” refer to the L-cones, M-cones, and S-cones, respectively. 
+    </p>
+    M sensitivity contribution within L cells
+    <input type="range" min="0" max="100" step="1" id="l" />
+    L sensitivity contribution within M cells
+    <input type="range" value="50" min="0" max="100" step="1" id="m" />
+    S sensitivity scaling
+    <input type="range" min="0" max="100" step="1" id="s" />
     <canvas id="colour" width="2800" height="800"></canvas>
     <button id="reset">Reset</button>
-    <h2>Deuteranomaly (common, ~8% of males)</h2>
-    <button id="deuteranomaly">Apply</button>
-    <p>M is shifted towards L (positive). Reds and greens get harder to distinguish.</p>
-    <h2>Protanomaly (rare, ~1% of males)</h2>
+    <h2>Protanomaly</h2>
     <button id="protanomaly">Apply</button>
-    <p>L is shifted towards M (negative). Reds become darker, and reds and greens get harder to distinguish.</p>
+    <p>L cone response becomes more like M cone. Reds and greens get harder to distinguish.</p>
+    <h2>Protanopia</h2>
+    <button id="protanopia">Apply</button>
+    <p>L cone response is identical M cone. Reds and greens are indistinguishable. Red objects appear darker than they would in Deuteranopia.</p>
+    
+    <h2>Deuteranomaly</h2>
+    <button id="deuteranomaly">Apply</button>
+    <p>M cone response becomes more like L cone. Reds and greens get harder to distinguish.</p>
+    <h2>Deuteranopia</h2>
+    <button id="deuteranopia">Apply</button>
+    <p>M cone response is identical L cone. Reds and greens are indistinguishable. Red objects appear lighter than they would in Protanopia.</p>
+    
+    <h2>Tritanopia</h2>
+    <button id="tritanopia">Apply</button>
+    <p>S cone response is entirely missing. Blue objects appear dark, differentiation between colours containing and not containing blue is lost.</p>
 </body>
 
 </html>

@@ -24,8 +24,8 @@ const lSpectrum = createChannelSpectrum(0);
 const mSpectrum = createChannelSpectrum(1);
 const sSpectrum = createChannelSpectrum(2);
 
-const offsetSpectrum = (spectrum: Spectrum, offset: number) => ({
-    sample: (wavelength: number) => spectrum.sample(wavelength - offset),
+const blendSpectrum = (a: Spectrum, b: Spectrum, blend: number) => ({
+    sample: (wavelength: number) => lerp(a.sample(wavelength), b.sample(wavelength), blend),
 });
 
 export const createColourBlindnessLMSSpectra = (
@@ -34,8 +34,8 @@ export const createColourBlindnessLMSSpectra = (
     sOffset: number,
 ): LMSLookup => {
     return {
-        l: offsetSpectrum(lSpectrum, lOffset),
-        m: offsetSpectrum(mSpectrum, mOffset),
-        s: offsetSpectrum(sSpectrum, sOffset),
+        l: blendSpectrum(lSpectrum, mSpectrum, lOffset / 100),
+        m: blendSpectrum(mSpectrum, lSpectrum, mOffset / 100),
+        s: blendSpectrum(sSpectrum, blendSpectrum(lSpectrum, mSpectrum, 0.5), sOffset / 100),
     };
 };
