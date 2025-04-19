@@ -53,6 +53,18 @@ export default class Colour {
     );
   }
 
+  copy() {
+    return new Colour(
+      new Vec3(
+        this.triplet.x,
+        this.triplet.y,
+        this.triplet.z,
+      ),
+      this.colourSpace,
+      this.colourSpaceProvider,
+    );
+  }
+
   multiply(colour: Colour | number): Colour {
     if (typeof colour === 'number') {
       return new Colour(
